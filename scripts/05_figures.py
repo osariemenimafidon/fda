@@ -51,11 +51,11 @@ ax.set_xlabel("←  lighter          Blend density minus certification-fuel refe
 # Title and subtitle positioned in POINTS, not axes fractions: this figure's height
 # varies with the number of states, so an axes-fraction offset collides on tall runs.
 ax.annotate("Bars: midpoint estimate.  Whiskers: full specification-envelope range.\n"
-            f"Direction is robust to any admissible property values in "
-            f"{S['density_sign_robust_pct']}% of state-years.",
+            "Only bars whose whiskers clear zero have a direction the specifications "
+            "determine —\nin practice the HVO-blending states. See LIMITATIONS §3.",
             xy=(0, 1), xycoords="axes fraction", xytext=(0, 8),
             textcoords="offset points", fontsize=7.6, color=MUTE, va="bottom")
-ax.annotate(f"State diesel pools diverge in opposite directions, {S['latest_year']}",
+ax.annotate(f"Divergence from the EPA certification fuel, {S['latest_year']}",
             xy=(0, 1), xycoords="axes fraction", xytext=(0, 34),
             textcoords="offset points", fontsize=11.5, weight="bold",
             color=INK, va="bottom")

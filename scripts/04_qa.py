@@ -79,8 +79,19 @@ def main():
         ((df.petroleum_share + df.fame_share + df.hvo_share - 1).abs() < 1e-9).all())
     checks["pool_total_positive"] = bool((df.pool_total > 0).all())
     checks["accounting_break_is_2021"] = S["accounting_break_year"] == 2021
-    checks["density_direction_mostly_robust"] = S["density_sign_robust_pct"] > 90
-    checks["cetane_robustness_disclosed"] = S["cetane_sign_robust_pct"] < 50
+    # An integrity check must test the PIPELINE, not assert the conclusion.
+    # An earlier version required density sign-robustness above 90%, which passed
+    # only because the reference point was wrong. When the reference was corrected
+    # to the EPA certification fuel the figure fell to a few per cent and the check
+    # failed - not because the build broke, but because the finding changed. A check
+    # that fails when a result changes is a check that pressures you to keep the
+    # result. What must be guaranteed is that robustness is MEASURED and CARRIED,
+    # whatever it turns out to be.
+    checks["sign_robustness_computed"] = bool(
+        df.density_sign_robust.notna().all() and df.cetane_sign_robust.notna().all())
+    checks["robustness_reported_in_stats"] = all(
+        k in S for k in ("density_sign_robust_pct", "cetane_sign_robust_pct"))
+    checks["component_deltas_reported"] = len(S["component_deltas_vs_petroleum"]) == 4
     checks["every_row_has_sensitivity_band"] = bool(
         df.density_dev_low.notna().all() and df.density_dev_high.notna().all())
     checks["deviation_within_band"] = bool(

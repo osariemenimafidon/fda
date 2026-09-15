@@ -15,6 +15,23 @@ DRAFT = ("> **DRAFT — NOT VERIFIED.** This package has not passed its verifica
 d = S["component_deltas_vs_petroleum"]
 ca = S["california"]
 
+def _verdict(k, prop):
+    v = d[k]
+    if not v["excludes_zero"]:
+        return "**not determined**"
+    if prop == "density":
+        return "always lighter" if v["high"] < 0 else "always heavier"
+    return "always higher" if v["low"] > 0 else "always lower"
+
+_rows = []
+for prop in ("density", "cetane"):
+    for comp in ("fame", "hvo"):
+        k = f"{prop}_{comp}"
+        unit = " kg/m³" if prop == "density" else ""
+        _rows.append(f"| {prop.capitalize()} | {comp.upper()} | "
+                     f"{d[k]['low']:+.0f} to {d[k]['high']:+.0f}{unit} | {_verdict(k, prop)} |")
+delta_table = "\n".join(_rows)
+
 # ---------------- LIMITATIONS ----------------
 lim = f"""# Fuel Divergence Atlas — Limitations
 
@@ -51,26 +68,39 @@ a real change in fuel supply.
 pipeline detects the break from the data and aborts if it is not at
 {S['accounting_break_year']}.
 
-## 3. Density direction is robust; cetane direction is not
+## 3. Only the HVO direction is established; the FAME direction is not
 
 Over the **full** specification envelopes, each component's difference from petroleum
 diesel is:
 
-| Property | Component | Difference from petroleum | Sign |
+| Property | Component | Difference from certification fuel | Sign |
 |---|---|---|---|
-| Density | FAME | {d['density_fame']['low']:+.0f} to {d['density_fame']['high']:+.0f} kg/m³ | **always heavier** |
-| Density | HVO | {d['density_hvo']['low']:+.0f} to {d['density_hvo']['high']:+.0f} kg/m³ | **always lighter** |
-| Cetane | FAME | {d['cetane_fame']['low']:+.0f} to {d['cetane_fame']['high']:+.0f} | **sign can flip** |
-| Cetane | HVO | {d['cetane_hvo']['low']:+.0f} to {d['cetane_hvo']['high']:+.0f} | always higher |
+{delta_table}
 
 Because the deviation equals `fame_share × (FAME − petroleum) + hvo_share × (HVO −
 petroleum)`, a common-mode error in the petroleum reference cancels. So:
 
-- **Density direction holds in {S['density_sign_robust_pct']}% of state-years** whatever
-  admissible property values are chosen. The *magnitude* remains uncertain.
-- **Cetane direction holds in only {S['cetane_sign_robust_pct']}% of state-years.** FAME's
-  cetane number straddles petroleum's, so for biodiesel-blending states the sign of the
-  cetane deviation is **not determined**. Do not assert a cetane direction for those states.
+**HVO is robustly lighter and robustly higher-cetane than the certification fuel.** Both
+its intervals exclude zero, so for states blending renewable diesel the direction of
+divergence holds for any admissible property values.
+
+**FAME's direction is not determined.** Its density envelope (860-900) overlaps the
+certification fuel's (838.9-864.6), and its cetane envelope (47-56) overlaps the
+certification fuel's (40-50). Both intervals straddle zero. For a state blending only
+biodiesel, **this dataset cannot say whether its pool is heavier or lighter than the
+certification fuel**, only that it differs.
+
+Consequently density direction is sign-robust in just
+{S['density_sign_robust_pct']}% of state-years and cetane direction in
+{S['cetane_sign_robust_pct']}% - essentially only the HVO-blending states. The midpoint
+estimates do show biodiesel states heavier, and that may well be true, but the
+specifications do not establish it and this dataset does not claim it.
+
+An earlier draft of this project reported density direction as robust in 95.3% of
+state-years. That figure came from using EN 590 - the European automotive diesel
+standard - as the certification-fuel proxy. EN 590 sits about 19 kg/m3 lighter than the
+fuel EPA actually certifies US engines on. Correcting the reference to 40 CFR 1065.703
+moved the result from "robust" to "not established" for every FAME-blending state.
 
 Every row carries `density_sign_robust` and `cetane_sign_robust` so this cannot be missed.
 

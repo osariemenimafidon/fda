@@ -16,36 +16,36 @@
     "fame_volume": 2001,
     "hvo_volume": 2011
   },
-  "density_reference": 832.5,
-  "cetane_reference": 53.0,
+  "density_reference": 851.75,
+  "cetane_reference": 45.0,
   "component_deltas_vs_petroleum": {
     "density_fame": {
-      "low": 15.0,
-      "high": 80.0,
-      "excludes_zero": true
+      "low": -4.600000000000023,
+      "high": 61.10000000000002,
+      "excludes_zero": false
     },
     "density_hvo": {
-      "low": -80.0,
-      "high": -20.0,
+      "low": -99.60000000000002,
+      "high": -38.89999999999998,
       "excludes_zero": true
     },
     "cetane_fame": {
-      "low": -8.0,
-      "high": 5.0,
+      "low": -3.0,
+      "high": 16.0,
       "excludes_zero": false
     },
     "cetane_hvo": {
-      "low": 15.0,
-      "high": 29.0,
+      "low": 20.0,
+      "high": 40.0,
       "excludes_zero": true
     }
   },
-  "density_sign_robust_pct": 95.3,
-  "cetane_sign_robust_pct": 3.2,
-  "density_band_median": 1.99,
-  "cetane_band_median": 0.4,
+  "density_sign_robust_pct": 2.7,
+  "cetane_sign_robust_pct": 4.7,
+  "density_band_median": 2.02,
+  "cetane_band_median": 0.58,
   "latest_year": 2024,
-  "spread_kg_m3": 30.7,
+  "spread_kg_m3": 38.3,
   "n_lighter": 3,
   "n_heavier": 40,
   "n_at_reference": 8,
@@ -55,47 +55,47 @@
       "petroleum_share": 0.4542,
       "fame_share": 0.0379,
       "hvo_share": 0.5079,
-      "blend_density": 808.91,
-      "density_dev": -23.59,
-      "density_dev_low": -40.06,
-      "density_dev_high": -7.13,
-      "blend_cetane": 64.12,
-      "divergence_index": 2.935
+      "blend_density": 817.65,
+      "density_dev": -34.1,
+      "density_dev_low": -50.76,
+      "density_dev_high": -17.44,
+      "blend_cetane": 60.48,
+      "divergence_index": 2.039
     },
     {
       "state": "OR",
       "petroleum_share": 0.6368,
       "fame_share": 0.0936,
       "hvo_share": 0.2695,
-      "blend_density": 823.47,
-      "density_dev": -9.03,
-      "density_dev_low": -20.16,
-      "density_dev_high": 2.1,
-      "blend_cetane": 58.79,
-      "divergence_index": 1.492
+      "blend_density": 835.73,
+      "density_dev": -16.02,
+      "density_dev_low": -27.28,
+      "density_dev_high": -4.76,
+      "blend_cetane": 53.69,
+      "divergence_index": 1.07
     },
     {
       "state": "WA",
       "petroleum_share": 0.7875,
       "fame_share": 0.0272,
       "hvo_share": 0.1853,
-      "blend_density": 824.53,
-      "density_dev": -7.97,
-      "density_dev_low": -14.42,
-      "density_dev_high": -1.53,
-      "blend_cetane": 57.04,
-      "divergence_index": 1.058
+      "blend_density": 839.69,
+      "density_dev": -12.06,
+      "density_dev_low": -18.58,
+      "density_dev_high": -5.55,
+      "blend_cetane": 50.74,
+      "divergence_index": 0.741
     },
     {
       "state": "AK",
       "petroleum_share": 1.0,
       "fame_share": 0.0,
       "hvo_share": 0.0,
-      "blend_density": 832.5,
+      "blend_density": 851.75,
       "density_dev": 0.0,
       "density_dev_low": 0.0,
       "density_dev_high": 0.0,
-      "blend_cetane": 53.0,
+      "blend_cetane": 45.0,
       "divergence_index": 0.0
     },
     {
@@ -103,12 +103,12 @@
       "petroleum_share": 0.9997,
       "fame_share": 0.0003,
       "hvo_share": 0.0,
-      "blend_density": 832.51,
+      "blend_density": 851.76,
       "density_dev": 0.01,
-      "density_dev_low": 0.0,
+      "density_dev_low": -0.0,
       "density_dev_high": 0.02,
-      "blend_cetane": 53.0,
-      "divergence_index": 0.001
+      "blend_cetane": 45.0,
+      "divergence_index": 0.0
     }
   ],
   "most_heavier": [
@@ -117,60 +117,60 @@
       "petroleum_share": 0.8501,
       "fame_share": 0.1499,
       "hvo_share": 0.0,
-      "blend_density": 839.62,
-      "density_dev": 7.12,
-      "density_dev_low": 2.25,
-      "density_dev_high": 11.99,
-      "blend_cetane": 52.78,
-      "divergence_index": 0.29
+      "blend_density": 855.98,
+      "density_dev": 4.23,
+      "density_dev_low": -0.69,
+      "density_dev_high": 9.16,
+      "blend_cetane": 45.97,
+      "divergence_index": 0.191
     },
     {
       "state": "IA",
       "petroleum_share": 0.8957,
       "fame_share": 0.1043,
       "hvo_share": 0.0,
-      "blend_density": 837.45,
-      "density_dev": 4.95,
-      "density_dev_low": 1.56,
-      "density_dev_high": 8.34,
-      "blend_cetane": 52.84,
-      "divergence_index": 0.202
+      "blend_density": 854.7,
+      "density_dev": 2.95,
+      "density_dev_low": -0.48,
+      "density_dev_high": 6.37,
+      "blend_cetane": 45.68,
+      "divergence_index": 0.133
     },
     {
       "state": "IL",
       "petroleum_share": 0.9239,
       "fame_share": 0.0761,
       "hvo_share": 0.0,
-      "blend_density": 836.11,
-      "density_dev": 3.61,
-      "density_dev_low": 1.14,
-      "density_dev_high": 6.09,
-      "blend_cetane": 52.89,
-      "divergence_index": 0.147
+      "blend_density": 853.9,
+      "density_dev": 2.15,
+      "density_dev_low": -0.35,
+      "density_dev_high": 4.65,
+      "blend_cetane": 45.49,
+      "divergence_index": 0.097
     },
     {
       "state": "HI",
       "petroleum_share": 0.9518,
       "fame_share": 0.0482,
       "hvo_share": 0.0,
-      "blend_density": 834.79,
-      "density_dev": 2.29,
-      "density_dev_low": 0.72,
-      "density_dev_high": 3.86,
-      "blend_cetane": 52.93,
-      "divergence_index": 0.093
+      "blend_density": 853.11,
+      "density_dev": 1.36,
+      "density_dev_low": -0.22,
+      "density_dev_high": 2.94,
+      "blend_cetane": 45.31,
+      "divergence_index": 0.062
     },
     {
       "state": "DC",
       "petroleum_share": 0.9645,
       "fame_share": 0.0355,
       "hvo_share": 0.0,
-      "blend_density": 834.18,
-      "density_dev": 1.68,
-      "density_dev_low": 0.53,
-      "density_dev_high": 2.84,
-      "blend_cetane": 52.95,
-      "divergence_index": 0.069
+      "blend_density": 852.75,
+      "density_dev": 1.0,
+      "density_dev_low": -0.16,
+      "density_dev_high": 2.17,
+      "blend_cetane": 45.23,
+      "divergence_index": 0.045
     }
   ],
   "california": {
@@ -178,12 +178,12 @@
     "petroleum_share": 0.4542,
     "fame_share": 0.0379,
     "hvo_share": 0.5079,
-    "blend_density": 808.91,
-    "density_dev": -23.59,
-    "density_dev_low": -40.06,
-    "density_dev_high": -7.13,
-    "blend_cetane": 64.12,
-    "divergence_index": 2.935
+    "blend_density": 817.65,
+    "density_dev": -34.1,
+    "density_dev_low": -50.76,
+    "density_dev_high": -17.44,
+    "blend_cetane": 60.48,
+    "divergence_index": 2.039
   },
   "california_non_petroleum_pct": 54.6,
   "us_biofuel_share_by_year": {
@@ -204,9 +204,9 @@
   },
   "components": {
     "petroleum": {
-      "density_mid": 832.5,
-      "cetane_mid": 53.0,
-      "spec": "EN 590 (temperate grade) / ASTM D975 No. 2-D"
+      "density_mid": 851.75,
+      "cetane_mid": 45.0,
+      "spec": "40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975"
     },
     "fame": {
       "density_mid": 880.0,
@@ -216,7 +216,7 @@
     "hvo": {
       "density_mid": 782.5,
       "cetane_mid": 75.0,
-      "spec": "EN 15940 (paraffinic)"
+      "spec": "EN 15940 (paraffinic diesel)"
     }
   },
   "integrity_checks": {
@@ -224,8 +224,9 @@
     "shares_sum_to_one": true,
     "pool_total_positive": true,
     "accounting_break_is_2021": true,
-    "density_direction_mostly_robust": true,
-    "cetane_robustness_disclosed": true,
+    "sign_robustness_computed": true,
+    "robustness_reported_in_stats": true,
+    "component_deltas_reported": true,
     "every_row_has_sensitivity_band": true,
     "deviation_within_band": true
   },

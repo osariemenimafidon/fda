@@ -34,26 +34,42 @@ a real change in fuel supply.
 pipeline detects the break from the data and aborts if it is not at
 2021.
 
-## 3. Density direction is robust; cetane direction is not
+## 3. Only the HVO direction is established; the FAME direction is not
 
 Over the **full** specification envelopes, each component's difference from petroleum
 diesel is:
 
-| Property | Component | Difference from petroleum | Sign |
+| Property | Component | Difference from certification fuel | Sign |
 |---|---|---|---|
-| Density | FAME | +15 to +80 kg/m³ | **always heavier** |
-| Density | HVO | -80 to -20 kg/m³ | **always lighter** |
-| Cetane | FAME | -8 to +5 | **sign can flip** |
-| Cetane | HVO | +15 to +29 | always higher |
+| Density | FAME | -5 to +61 kg/m³ | **not determined** |
+| Density | HVO | -100 to -39 kg/m³ | always lighter |
+| Cetane | FAME | -3 to +16 | **not determined** |
+| Cetane | HVO | +20 to +40 | always higher |
 
 Because the deviation equals `fame_share × (FAME − petroleum) + hvo_share × (HVO −
 petroleum)`, a common-mode error in the petroleum reference cancels. So:
 
-- **Density direction holds in 95.3% of state-years** whatever
-  admissible property values are chosen. The *magnitude* remains uncertain.
-- **Cetane direction holds in only 3.2% of state-years.** FAME's
-  cetane number straddles petroleum's, so for biodiesel-blending states the sign of the
-  cetane deviation is **not determined**. Do not assert a cetane direction for those states.
+**HVO is robustly lighter and robustly higher-cetane than the certification fuel.** Both
+its intervals exclude zero, so for states blending renewable diesel the direction of
+divergence holds for any admissible property values.
+
+**FAME's direction is not determined.** Its density envelope (860-900) overlaps the
+certification fuel's (838.9-864.6), and its cetane envelope (47-56) overlaps the
+certification fuel's (40-50). Both intervals straddle zero. For a state blending only
+biodiesel, **this dataset cannot say whether its pool is heavier or lighter than the
+certification fuel**, only that it differs.
+
+Consequently density direction is sign-robust in just
+2.7% of state-years and cetane direction in
+4.7% - essentially only the HVO-blending states. The midpoint
+estimates do show biodiesel states heavier, and that may well be true, but the
+specifications do not establish it and this dataset does not claim it.
+
+An earlier draft of this project reported density direction as robust in 95.3% of
+state-years. That figure came from using EN 590 - the European automotive diesel
+standard - as the certification-fuel proxy. EN 590 sits about 19 kg/m3 lighter than the
+fuel EPA actually certifies US engines on. Correcting the reference to 40 CFR 1065.703
+moved the result from "robust" to "not established" for every FAME-blending state.
 
 Every row carries `density_sign_robust` and `cetane_sign_robust` so this cannot be missed.
 
@@ -77,7 +93,7 @@ are nonroad, so the fuel pool they actually see is **not** exactly this one.
 ## 7. The reference point is a choice
 
 Divergence is measured against the midpoint of the petroleum diesel specification
-(832.5 kg/m³, cetane 53.0). EPA's certification
+(851.75 kg/m³, cetane 45.0). EPA's certification
 fuel has its own specification which may sit elsewhere in that range. Shifting the
 reference shifts every deviation by a constant; it does not change the spread between
 states, which is the finding.
@@ -95,7 +111,8 @@ All pass in this build. They test internal consistency, **not** agreement with E
 - PASS — `shares_sum_to_one`
 - PASS — `pool_total_positive`
 - PASS — `accounting_break_is_2021`
-- PASS — `density_direction_mostly_robust`
-- PASS — `cetane_robustness_disclosed`
+- PASS — `sign_robustness_computed`
+- PASS — `robustness_reported_in_stats`
+- PASS — `component_deltas_reported`
 - PASS — `every_row_has_sensitivity_band`
 - PASS — `deviation_within_band`

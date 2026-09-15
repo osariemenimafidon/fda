@@ -7,18 +7,18 @@ Author: Imafidon, Osariemen · ORCID 0009-0006-3069-4674
 ## Part 1 — Reproduce
 
 - [ ] Ran the pipeline from `README.md`; `stats.json` matches the shipped copy
-- [ ] All 8 integrity checks PASS
+- [ ] All 9 integrity checks PASS
 - [ ] SHA-256 hashes in `logs/provenance.jsonl` match my downloaded EIA files
 
 Expected headline figures:
 
 | | |
 |---|---|
-| Spread across states, 2024 | 30.7 kg/m³ |
+| Spread across states, 2024 | 38.3 kg/m³ |
 | States lighter / heavier / at reference | 3 / 40 / 8 |
 | California non-petroleum share | 54.6% |
-| Density direction sign-robust | 95.3% of state-years |
-| Cetane direction sign-robust | 3.2% of state-years |
+| Density direction sign-robust | 2.7% of state-years |
+| Cetane direction sign-robust | 4.7% of state-years |
 
 ## Part 2 — The property values (the load-bearing assumption)
 
@@ -27,9 +27,9 @@ anything is published.** They live in `src/fda/properties.py`.
 
 | Component | Specification | Density range | Cetane range |
 |---|---|---|---|
-| Petroleum diesel | EN 590 (temperate grade) / ASTM D975 No. 2-D | 820.0–845.0 | 51.0–55.0 |
+| Petroleum diesel | 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975 | 838.9–864.6 | 40.0–50.0 |
 | FAME biodiesel | ASTM D6751 / EN 14214 | 860.0–900.0 | 47.0–56.0 |
-| HVO renewable diesel | EN 15940 (paraffinic) | 765.0–800.0 | 70.0–80.0 |
+| HVO renewable diesel | EN 15940 (paraffinic diesel) | 765.0–800.0 | 70.0–80.0 |
 
 - [ ] Petroleum diesel density range confirmed
 - [ ] Petroleum diesel cetane range confirmed
@@ -39,7 +39,7 @@ anything is published.** They live in `src/fda/properties.py`.
 
 ## Part 3 — Spot-checks against EIA
 
-- [ ] California 2024: pool 808 kg/m³ from
+- [ ] California 2024: pool 817 kg/m³ from
       45% petroleum / 4% FAME /
       51% HVO — checked against EIA's own SEDS tables
 - [ ] Confirmed EIA's published narrative agrees that renewable diesel consumption is
@@ -49,10 +49,10 @@ anything is published.** They live in `src/fda/properties.py`.
 ## Part 4 — Judgement calls
 
 - [ ] **Reference point.** Using the petroleum specification midpoint
-      (832.5 kg/m³) as the certification-fuel proxy is defensible, or
+      (851.75 kg/m³) as the certification-fuel proxy is defensible, or
       I have substituted EPA's actual certification fuel specification.
 - [ ] **Cetane.** I accept that the cetane direction is not robust
-      (3.2% of rows) and that LIMITATIONS §3 and §5 say so
+      (4.7% of rows) and that LIMITATIONS §3 and §5 say so
       plainly enough that no reader will quote a cetane direction for a FAME state.
 - [ ] **Framing.** LIMITATIONS §1 makes it unmissable that these are specification-based
       estimates, not fuel assays.

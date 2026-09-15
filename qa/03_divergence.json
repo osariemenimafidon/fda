@@ -1,32 +1,32 @@
 {
   "negative_petroleum_share_rows": 0,
-  "density_reference": 832.5,
-  "density_spec_width": 25.0,
-  "cetane_reference": 53.0,
-  "cetane_spec_width": 4.0,
-  "density_band_median": 1.99,
-  "density_sign_robust_pct": 95.3,
-  "cetane_band_median": 0.4,
-  "cetane_sign_robust_pct": 3.2,
+  "density_reference": 851.75,
+  "density_spec_width": 25.700000000000045,
+  "cetane_reference": 45.0,
+  "cetane_spec_width": 10.0,
+  "density_band_median": 2.02,
+  "density_sign_robust_pct": 2.7,
+  "cetane_band_median": 0.58,
+  "cetane_sign_robust_pct": 4.7,
   "component_deltas_vs_petroleum": {
     "density_fame": {
-      "low": 15.0,
-      "high": 80.0,
-      "excludes_zero": true
+      "low": -4.600000000000023,
+      "high": 61.10000000000002,
+      "excludes_zero": false
     },
     "density_hvo": {
-      "low": -80.0,
-      "high": -20.0,
+      "low": -99.60000000000002,
+      "high": -38.89999999999998,
       "excludes_zero": true
     },
     "cetane_fame": {
-      "low": -8.0,
-      "high": 5.0,
+      "low": -3.0,
+      "high": 16.0,
       "excludes_zero": false
     },
     "cetane_hvo": {
-      "low": 15.0,
-      "high": 29.0,
+      "low": 20.0,
+      "high": 40.0,
       "excludes_zero": true
     }
   },

@@ -11,23 +11,29 @@ Part of the [FACET](https://osariemenimafidon.github.io/facet/) research program
 
 ## The finding
 
-US diesel pools diverge from the certification fuel **in opposite directions depending on
-which policy drives the state.**
+**States blending HVO renewable diesel have diesel pools that are robustly lighter and
+higher-cetane than the fuel EPA certifies engines on.** California's 2024 pool is 54.6%
+non-petroleum — 51% renewable diesel — and sits about 34 kg/m³ lighter than the
+certification fuel.
 
-Clean-fuel-standard states blend HVO renewable diesel and their pool gets **lighter**.
-Biodiesel-mandate states blend FAME and their pool gets **heavier**. An engine calibrated
-for the national average is mis-calibrated in California and mis-calibrated the other way
-in Minnesota.
+That direction holds for **any** admissible property values: HVO's density envelope
+(765–800) lies entirely below the certification fuel's (838.9–864.6), and its cetane
+envelope entirely above. Only the magnitude is uncertain.
 
-Over the full specification envelopes, FAME is always heavier than petroleum diesel and
-HVO always lighter, so the **direction** of density divergence is robust to any admissible
-choice of property values — only the magnitude is uncertain. Cetane is not robust and
-the documentation says so.
+**For states blending FAME biodiesel, the direction is not established.** FAME's density
+and cetane envelopes both overlap the certification fuel's, so this dataset cannot say
+whether a biodiesel-blending state's pool is heavier or lighter — only that it differs.
+Midpoint estimates suggest heavier, and that may be true, but the specifications do not
+establish it and the dataset does not claim it.
 
 ## Two things to read before using it
 
 **1. These are estimates, not assays.** Consumption volumes combined with specification
 envelopes. Nobody sampled a pump. See `docs/LIMITATIONS.md` §1.
+
+**1b. The reference is the EPA certification fuel**, 40 CFR 1065.703 (API 32–37, cetane
+40–50), not a European standard. An earlier draft used EN 590, which sits ~19 kg/m³
+lighter; correcting it changed which conclusions hold.
 
 **2. The intuitive way to compute blend share is wrong.** EIA changed its distillate
 accounting in 2021; `DFACP + BDACP + B1ACP` double-counts from then on while being correct

@@ -33,7 +33,7 @@ Unit of analysis: **(state, year)**. 728 rows,
 | `cetane_dev_low` | Lowest cetane deviation across envelopes. |
 | `cetane_dev_high` | Highest cetane deviation across envelopes. |
 | `cetane_dev_band` | Band width. |
-| `cetane_sign_robust` | True when the band excludes zero. Only 3.2% of rows. |
+| `cetane_sign_robust` | True when the band excludes zero. Only 4.7% of rows. |
 | `divergence_index` | Euclidean magnitude of the normalised (density, cetane) pair. Always ≥ 0; use the signed columns for direction. |
 | `direction` | `lighter`, `heavier`, or `at_reference`, from the sign of density_dev. |
 
