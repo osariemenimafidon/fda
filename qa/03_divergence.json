@@ -1,0 +1,39 @@
+{
+  "negative_petroleum_share_rows": 0,
+  "density_reference": 832.5,
+  "density_spec_width": 25.0,
+  "cetane_reference": 53.0,
+  "cetane_spec_width": 4.0,
+  "density_band_median": 1.99,
+  "density_sign_robust_pct": 95.3,
+  "cetane_band_median": 0.4,
+  "cetane_sign_robust_pct": 3.2,
+  "component_deltas_vs_petroleum": {
+    "density_fame": {
+      "low": 15.0,
+      "high": 80.0,
+      "excludes_zero": true
+    },
+    "density_hvo": {
+      "low": -80.0,
+      "high": -20.0,
+      "excludes_zero": true
+    },
+    "cetane_fame": {
+      "low": -8.0,
+      "high": 5.0,
+      "excludes_zero": false
+    },
+    "cetane_hvo": {
+      "low": 15.0,
+      "high": 29.0,
+      "excludes_zero": true
+    }
+  },
+  "rows": 728,
+  "years": [
+    2011,
+    2024
+  ],
+  "states": 52
+}

@@ -1,0 +1,25 @@
+{
+  "source_rows": 12800,
+  "source_year_range": [
+    1960,
+    2024
+  ],
+  "regime_identical_years": [
+    1960,
+    2020
+  ],
+  "regime_split_years": [
+    2021,
+    2024
+  ],
+  "naive_overcount_mean_kbbl": 20008.2,
+  "naive_overcount_pct_mean": 1.726,
+  "first_nonzero_year": {
+    "fame_volume": 2001,
+    "hvo_volume": 2011
+  },
+  "usable_year_start": 2011,
+  "usable_year_end": 2024,
+  "panel_rows": 3380,
+  "states": 52
+}

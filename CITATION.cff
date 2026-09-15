@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+title: "FDA: Fuel Divergence Atlas"
+message: "If you use this dataset, please cite it as below."
+type: dataset
+authors:
+  - family-names: "Imafidon"
+    given-names: "Osariemen"
+    orcid: "https://orcid.org/0009-0006-3069-4674"
+    affiliation: "Independent Researcher"
+version: "1.0.0-draft"
+date-released: "2026-09-15"
+license: CC-BY-4.0
+abstract: >-
+  State-level estimates of how far the in-service transportation diesel pool diverges
+  from the certification fuel, 2011-2024, derived from US EIA State
+  Energy Data System consumption volumes combined with published fuel specification
+  envelopes. Finds that divergence is bidirectional: states driven by low-carbon fuel
+  standards blend HVO renewable diesel and their pool becomes lighter, while states with
+  biodiesel blending mandates blend FAME and their pool becomes heavier, giving a spread
+  of 30.7 kg/m3 across states in 2024. These are
+  specification-based estimates, not fuel assays.
+keywords:
+  - diesel fuel
+  - renewable diesel
+  - biodiesel
+  - fuel properties
+  - low carbon fuel standard
+  - open data

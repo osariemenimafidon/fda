@@ -1,0 +1,10 @@
+data/raw/*.csv
+data/raw/*.xlsx
+data/processed/*.csv
+data/processed/*.parquet
+release/
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+.gate-signed

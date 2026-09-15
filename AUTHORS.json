@@ -1,0 +1,17 @@
+{
+  "title": "FDA: Fuel Divergence Atlas",
+  "authors": [
+    {
+      "name": "Imafidon, Osariemen",
+      "given_names": "Osariemen",
+      "family_name": "Imafidon",
+      "orcid": "0009-0006-3069-4674",
+      "email": "odimafid@gmail.com",
+      "affiliation": "Independent Researcher",
+      "credit_roles": ["Conceptualization","Data curation","Formal analysis",
+                       "Methodology","Software","Validation","Writing - original draft"]
+    }
+  ],
+  "program": "FACET — Fuel-Adaptive Control Evidence & Transferability",
+  "license": {"data":"CC-BY-4.0","code":"MIT","documentation":"CC-BY-4.0"}
+}
