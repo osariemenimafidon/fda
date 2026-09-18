@@ -7,18 +7,29 @@ authors:
     given-names: "Osariemen"
     orcid: "https://orcid.org/0009-0006-3069-4674"
     affiliation: "Independent Researcher"
-version: "1.0.0-draft"
+version: "1.0.0"
 date-released: "2026-09-18"
 license: CC-BY-4.0
+doi: "10.5281/zenodo.22822535"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22822535"
+    description: "Concept DOI; always resolves to the newest version."
+  - type: doi
+    value: "10.5281/zenodo.22832979"
+    description: "Version 2, the corrected build."
 abstract: >-
   State-level estimates of how far the in-service transportation diesel pool diverges
   from the certification fuel, 2011-2024, derived from US EIA State
   Energy Data System consumption volumes combined with published fuel specification
-  envelopes. Finds that divergence is bidirectional: states driven by low-carbon fuel
-  standards blend HVO renewable diesel and their pool becomes lighter, while states with
-  biodiesel blending mandates blend FAME and their pool becomes heavier, giving a spread
-  of 38.3 kg/m3 across states in 2024. These are
-  specification-based estimates, not fuel assays.
+  envelopes. The result is asymmetric. For states blending HVO renewable diesel the
+  direction is established for any admissible property values and the pool is lighter;
+  for states blending only FAME biodiesel the specifications do not determine a
+  direction, and none is asserted. The spread between the lightest and heaviest
+  estimated state pool in 2024 is 38.3 kg/m3, and that
+  spread does not depend on the choice of reference. These are specification-based
+  estimates, not fuel assays, and they describe transportation-sector distillate rather
+  than the fuel burned by the largely nonroad certified engine population.
 keywords:
   - diesel fuel
   - renewable diesel

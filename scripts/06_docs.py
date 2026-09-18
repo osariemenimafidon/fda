@@ -13,6 +13,22 @@ f = lambda n: f"{n:,}" if isinstance(n, int) else n
 # cannot be verified in one document and draft in another, and deleting the
 # signature returns every document to DRAFT on the next build.
 SIGNED = os.path.exists(".gate-signed")
+
+# Identifiers are read from docs/DOI.txt rather than typed into prose, so a new
+# version updates every document by rewriting one file.
+DOI = {}
+if os.path.exists("docs/DOI.txt"):
+    for _l in open("docs/DOI.txt"):
+        _l = _l.strip()
+        if _l and not _l.startswith("#") and ":" in _l:
+            _k, _v = _l.split(":", 1)
+            DOI[_k.strip()] = _v.strip()
+CONCEPT_DOI = DOI.get("concept")
+CITE_LINE = (f"Cite this work by its concept DOI, {CONCEPT_DOI}, which always resolves to "
+             f"the newest version. The version deposited alongside this build is "
+             f"{DOI.get('version_v2', 'not yet assigned')}."
+             if CONCEPT_DOI else
+             "No DOI has been minted for this package yet.")
 DRAFT = ("" if SIGNED else
          "> **DRAFT — NOT VERIFIED.** This package has not passed its verification gate. "
          "No value in it has been checked against the primary source by the author. "
@@ -458,18 +474,29 @@ authors:
     given-names: "{au['given_names']}"
     orcid: "https://orcid.org/{au['orcid']}"
     affiliation: "{au['affiliation']}"
-version: "1.0.0-draft"
+version: "{'1.0.0' if SIGNED else '1.0.0-draft'}"
 date-released: "{S['build_date']}"
 license: CC-BY-4.0
+doi: "{CONCEPT_DOI or ''}"
+identifiers:
+  - type: doi
+    value: "{CONCEPT_DOI or ''}"
+    description: "Concept DOI; always resolves to the newest version."
+  - type: doi
+    value: "{DOI.get('version_v2', '')}"
+    description: "Version 2, the corrected build."
 abstract: >-
   State-level estimates of how far the in-service transportation diesel pool diverges
   from the certification fuel, {S['year_min']}-{S['year_max']}, derived from US EIA State
   Energy Data System consumption volumes combined with published fuel specification
-  envelopes. Finds that divergence is bidirectional: states driven by low-carbon fuel
-  standards blend HVO renewable diesel and their pool becomes lighter, while states with
-  biodiesel blending mandates blend FAME and their pool becomes heavier, giving a spread
-  of {S['spread_kg_m3']} kg/m3 across states in {S['latest_year']}. These are
-  specification-based estimates, not fuel assays.
+  envelopes. The result is asymmetric. For states blending HVO renewable diesel the
+  direction is established for any admissible property values and the pool is lighter;
+  for states blending only FAME biodiesel the specifications do not determine a
+  direction, and none is asserted. The spread between the lightest and heaviest
+  estimated state pool in {S['latest_year']} is {S['spread_kg_m3']} kg/m3, and that
+  spread does not depend on the choice of reference. These are specification-based
+  estimates, not fuel assays, and they describe transportation-sector distillate rather
+  than the fuel burned by the largely nonroad certified engine population.
 keywords:
   - diesel fuel
   - renewable diesel

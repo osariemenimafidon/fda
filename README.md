@@ -112,6 +112,19 @@ input's SHA-256 against `logs/provenance.jsonl`. Results live in `qa/`.
 What is left for the author is judgement, not arithmetic. See
 `docs/VERIFICATION_CHECKLIST.md`.
 
+## Citation
+
+Cite the work by its **concept DOI**, which always resolves to the newest version:
+
+> Imafidon, O. (2026). *How far has the diesel pool moved from the certification fuel? A
+> state-level specification-based atlas for the United States, 2011-2024*. Zenodo.
+> https://doi.org/10.5281/zenodo.22822535
+
+Version 2, the corrected build, is `10.5281/zenodo.22832979`. Version 1
+(`10.5281/zenodo.22822536`) remains resolvable and is superseded; see
+`docs/ZENODO_NEW_VERSION.md` for what changed and why it was superseded rather than
+replaced.
+
 ## Status
 
 **Verified.** The gate is signed and `.gate-signed` is tracked, so a clone rebuilds to this

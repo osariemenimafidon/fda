@@ -1,0 +1,5 @@
+# Zenodo identifiers for the Fuel Divergence Atlas preprint.
+# concept = always resolves to the newest version; cite this for the work.
+concept: 10.5281/zenodo.22822535
+version_v2: 10.5281/zenodo.22832979
+version_v1: 10.5281/zenodo.22822536
