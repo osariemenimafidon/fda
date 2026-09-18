@@ -1,7 +1,8 @@
 """Fuel component property envelopes and the certification-fuel reference.
 
-EVERY VALUE HERE IS [VERIFY]. The whole dataset scales with them, so they are
-isolated in one file: one place to check, one place to correct.
+Every value here is the author's, not EIA's, and they are isolated in one file:
+one place to check, one place to correct. Their status at the time of signing is
+recorded per value in the notes below and in .gate-signed.
 
 TWO DIFFERENT KINDS OF NUMBER
 -----------------------------
@@ -51,7 +52,7 @@ THE PETROLEUM COMPONENT
 -----------------------
 The petroleum fraction of the in-service pool is assumed to share the
 certification fuel's envelope. Both are ASTM D975 No. 2-D ultra-low-sulfur
-distillate. [VERIFY] The consequence is deliberate: a state burning no biofuel
+distillate. The consequence is deliberate: a state burning no biofuel
 has exactly zero divergence, so every non-zero value in this dataset is
 attributable to biofuel content and nothing else. Real market diesel may sit
 elsewhere within D975, which sets no density limit at all; that is stated in
@@ -98,7 +99,8 @@ COMPONENTS = {
         "cetane_spec": (47.0, None),
         "cetane_typical": (47.0, 56.0),
         "density_note": "Two-sided in EN 14214 (860-900). ASTM D6751 sets no density "
-                        "limit, so this bound rests on EN 14214 alone. [VERIFY]",
+                        "limit, so this bound rests on EN 14214 alone. Taken off the critical path by "
+                        "the breakdown point rather than confirmed directly; see LIMITATIONS 4.",
         "cetane_note": "One-sided. ASTM D6751 minimum 47; EN 14214 minimum 51. "
                        "Neither standard states a maximum.",
         "density_typical_basis": "Same as the EN 14214 specification range.",
@@ -114,7 +116,8 @@ COMPONENTS = {
         # EN 15940 class A states a cetane minimum of 70 and no maximum.
         "cetane_spec": (70.0, None),
         "cetane_typical": (70.0, 90.0),
-        "density_note": "Two-sided. EN 15940 specified range. [VERIFY]",
+        "density_note": "Two-sided. EN 15940 specified range, confirmed against the "
+                        "standard under FUELDIV's signed verification gate.",
         "cetane_note": "One-sided. EN 15940 class A minimum 70; no maximum stated.",
         "density_typical_basis": "Same as the EN 15940 specification range.",
         "cetane_typical_basis": "ASSUMPTION of this study: 70-90 is the range commonly "
@@ -127,7 +130,8 @@ REFERENCE = "petroleum"
 
 # Temperature bases differ: the certification fuel's API gravity is at 60 F
 # (15.56 C) while EN 14214 and EN 15940 specify density at 15 C. The offset is
-# under 1 kg/m3, far inside the envelope widths, and is not corrected. [VERIFY]
+# under 1 kg/m3, far inside the envelope widths, and is not corrected. Ruled on
+# by the author at signing: accepted as immaterial at this resolution.
 TEMPERATURE_NOTE = ("Certification fuel density derived at 60 F; biofuel "
                     "specifications are at 15 C. Offset <1 kg/m3, not corrected.")
 

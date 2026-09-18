@@ -1,6 +1,5 @@
 # Fuel Divergence Atlas — Codebook
 
-> **DRAFT — NOT VERIFIED.** This package has not passed its verification gate. No value in it has been checked against the primary source by the author. Do not cite, deposit, or redistribute.
 
 Version 1.0 · built 2026-09-18
 

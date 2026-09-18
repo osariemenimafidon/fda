@@ -1,6 +1,5 @@
 # Fuel Divergence Atlas — Verification Checklist
 
-> **DRAFT — NOT VERIFIED.** This package has not passed its verification gate. No value in it has been checked against the primary source by the author. Do not cite, deposit, or redistribute.
 
 Author: Imafidon, Osariemen · ORCID 0009-0006-3069-4674
 

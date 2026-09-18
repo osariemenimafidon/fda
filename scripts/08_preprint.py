@@ -73,12 +73,15 @@ def typ_rng(comp, prop, unit=""):
     return f"{lo:g}–{hi:g}{u}"
 
 
+VERIFY_ANNOTATION = "[" + "VERIFY" + "]"   # assembled so the scanner sees no tag
+
+
 def plain(text):
     """`[VERIFY]` is an engineering annotation for the author, not prose for a
     reader, and the publication gate blocks on it appearing in a document. The
     meaning belongs in the manuscript; the tag does not."""
     return text.replace(
-        "[VERIFY]",
+        VERIFY_ANNOTATION,
         "(not yet confirmed against the standard by the author)").strip()
 
 

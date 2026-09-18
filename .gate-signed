@@ -1,0 +1,53 @@
+Fuel Divergence Atlas — verification gate, signed by the author.
+
+WHAT THIS SIGNATURE COVERS
+
+Judgement, not arithmetic. The mechanical claims are established by checks in
+qa/ and can be re-run by anyone; a reader should verify them there rather than
+take this signature's word for them:
+
+  qa/09_reproduce.json      clean-clone rebuild, 251 keys diffed against the
+                            committed stats.json, verdict REPRODUCED
+  qa/10_eia_crosscheck.json published shares vs values read from EIA's own CSV,
+                            verdict AGREES, worst share difference 0.000000
+  provenance_hashes_match   SHA-256 of every raw input vs logs/provenance.jsonl
+  16 integrity checks       all passing, reported in stats.json
+
+WHAT THE AUTHOR ATTESTS
+
+The author has read the limitations and the judgement calls recorded in this
+package and accepts them. The certification-fuel and EN 15940 values carried
+over from FUELDIV are the ones they confirmed against their sources under that
+project's signed gate. They have read the results of the reproduction,
+provenance and EIA cross-checks. They accept the breakdown-point treatment of
+FAME density, including that 18 early-year rows do depend on the EN 14214 figure
+and are reported as doing so. No number in this package is described as
+measured, and no direction is asserted that the specifications do not establish.
+
+THE FOUR JUDGEMENT CALLS, AND THE AUTHOR'S RULING
+
+  Reference point  Accepted. The midpoint of EPA's own certification envelope,
+                   851.75 kg/m3, is the centre of the API 32-37 range in
+                   40 CFR 1065.703. Shifting it moves every state's deviation by
+                   a constant and leaves the 38.3 kg/m3 spread unchanged.
+
+  Cetane           Accepted. The direction is sign-robust in 4.7% of state-years
+                   and is not asserted elsewhere. No cetane point estimate is
+                   published; the reported quantity is a specification-derived
+                   lower bound.
+
+  Framing          Accepted. LIMITATIONS section 1 states that nobody sampled a
+                   pump and that treating these values as measurements is misuse.
+
+  Sector           Accepted, after revision. The prior wording said "many of the
+                   engines CIDEX covers are nonroad" for a figure of 91.9%, and
+                   sat at section 6 of 8. It is now section 1b, carries the
+                   derived figure, and is repeated in the manuscript's own
+                   statement of what it does not claim. The author agreed to this
+                   revision before signing.
+
+Signed:   Imafidon, Osariemen (ORCID 0009-0006-3069-4674)
+Recorded: 2026-09-18
+Ruling given in the author's own words: "i agree"
+
+Deleting this file returns every document and figure to DRAFT on the next build.

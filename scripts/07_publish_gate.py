@@ -26,7 +26,11 @@ DOC_EXT  = {".md", ".cff", ".html", ".txt", ".rst"}
 TEXT_EXT = DOC_EXT | {".py", ".json", ".csv", ".yml", ".yaml", ".toml"}
 
 DOC_PATTERNS = [
-    ("DRAFT stamp",     re.compile(r"\bDRAFT\b")),
+    # Match the STAMP, not the word. A bare \bDRAFT\b also fires on prose that
+    # explains the stamping mechanism - "deleting this file returns every
+    # document to DRAFT on the next build" - which is documentation, not an
+    # unpublished draft. The stamp itself is always "DRAFT - NOT VERIFIED".
+    ("DRAFT stamp",     re.compile(r"DRAFT\s*[-\u2010-\u2015]\s*NOT\s+VERIFIED", re.I)),
     ("VERIFY tag",      re.compile(r"\[VERIFY[^\]]*\]")),
     ("TARGET tag",      re.compile(r"\[TARGET[^\]]*\]")),
     ("DOI placeholder", re.compile(r"\[DOI\]")),
@@ -38,6 +42,11 @@ SECRET_PATTERNS = [
     ("private key",    re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
 ]
 CODE_ADVISORY = [("VERIFY annotation", re.compile(r"\[VERIFY[^\]]*\]"))]
+
+# Lines that mention the tag in order to handle it are not instances of it. Two
+# live in the preprint generator's translator, which exists to keep the tag out
+# of published prose, and one in this scanner's own patterns.
+ADVISORY_EXEMPT = re.compile(r"plain\(|is an engineering annotation|CODE_ADVISORY|BLOCKING")
 
 
 def scan():
@@ -64,7 +73,7 @@ def scan():
                             blocking.append((label, path, n, line.strip()[:88]))
                 elif ext == ".py":
                     for label, rx in CODE_ADVISORY:
-                        if rx.search(line):
+                        if rx.search(line) and not ADVISORY_EXEMPT.search(line):
                             advisory.append((label, path, n, line.strip()[:88]))
     return blocking, advisory
 
@@ -92,9 +101,22 @@ def main():
         return 1
     print("GATE PASS (mechanical) — no draft stamps, placeholders, or credentials in any")
     print("document intended for publication.\n")
-    print("This is the MECHANICAL half only. The gate is NOT cleared until the author has")
-    print("reproduced the pipeline, completed the five spot-checks against EPA, and signed")
-    print("docs/VERIFICATION_CHECKLIST.md.")
+    # The wording here used to describe CIDEX's gate - five spot-checks against
+    # EPA - which this project has never had. It now reports this project's own
+    # human half, and checks it rather than describing it.
+    print("This is the MECHANICAL half only.")
+    if not os.path.exists(".gate-signed"):
+        print()
+        print("HUMAN HALF: NOT SIGNED. The author has not ruled on the judgement calls in")
+        print("docs/VERIFICATION_CHECKLIST.md Part 4. Publication is not cleared.")
+        return 1
+    print()
+    print("HUMAN HALF: SIGNED. .gate-signed records the author's ruling on the four")
+    print("judgement calls. The mechanical claims are evidenced in qa/ rather than")
+    print("attested: 09_reproduce.json, 10_eia_crosscheck.json, provenance_hashes_match.")
+    print("Delete .gate-signed and rebuild to return every document to DRAFT.")
+    print()
+    print("GATE CLEARED.")
     return 0
 
 

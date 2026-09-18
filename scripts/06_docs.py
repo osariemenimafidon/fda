@@ -9,7 +9,12 @@ S = json.load(open(f"{OUT}/stats.json"))
 A = json.load(open("AUTHORS.json")); au = A["authors"][0]
 os.makedirs(DOCS, exist_ok=True)
 f = lambda n: f"{n:,}" if isinstance(n, int) else n
-DRAFT = ("> **DRAFT — NOT VERIFIED.** This package has not passed its verification gate. "
+# The draft stamp is driven by the gate file, not by a hand edit, so a package
+# cannot be verified in one document and draft in another, and deleting the
+# signature returns every document to DRAFT on the next build.
+SIGNED = os.path.exists(".gate-signed")
+DRAFT = ("" if SIGNED else
+         "> **DRAFT — NOT VERIFIED.** This package has not passed its verification gate. "
          "No value in it has been checked against the primary source by the author. "
          "Do not cite, deposit, or redistribute.\n")
 # The engine population this dataset is meant to speak to lives in CIDEX, so the

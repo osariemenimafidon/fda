@@ -8,8 +8,6 @@ Correspondence: odimafid@gmail.com.
 **Preprint.** Not peer reviewed. Part of the
 [FACET](https://osariemenimafidon.github.io/facet/) research program.
 
-> **DRAFT — NOT VERIFIED.** This manuscript has not passed its verification gate. No value in it has been checked against the primary source by the author. It must not be cited, deposited or submitted.
-
 ---
 
 ## Abstract
@@ -642,7 +640,7 @@ The pipeline is a sequence of numbered scripts. Provenance is logged at every fe
 SHA-256 digest. Every number in this manuscript is interpolated from the machine-written
 statistics file; none is typed by hand.
 
-**This package has not passed its verification gate.** The verification checklist requires the author to confirm each component property envelope against its governing specification, to reproduce the pipeline from the source files, and to rule on the reference-fuel choice in Section 3.2. Until that attestation exists, the publication gate refuses to remove the draft stamp, and this manuscript must not be cited, deposited or submitted. It is circulated in draft form so that the method can be criticised before the values are relied upon.
+The author has signed the verification gate.
 
 ---
 
@@ -702,9 +700,9 @@ results are the author's, and the author is responsible for the content.
 
 - **Petroleum diesel (certification envelope)**, density (kg/m³). Specification: 838.9-864.6 [40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975]. Two-sided. Derived from the regulation's API gravity range 32-37. ASTM D975 sets no density limit. Assumed typical range used for the point estimate: 838.9–864.6, midpoint 851.75. Same as the specification; no assumption added.
 - **Petroleum diesel (certification envelope)**, cetane (cetane number). Specification: 40-50 [40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975]. Two-sided. 40 CFR 1065.703 cetane 40-50 by ASTM D613. ASTM D975 requires a minimum of 40. Assumed typical range used for the point estimate: 40–50, midpoint 45. Same as the specification; no assumption added.
-- **FAME biodiesel (B100)**, density (kg/m³). Specification: 860-900 [ASTM D6751 / EN 14214]. Two-sided in EN 14214 (860-900). ASTM D6751 sets no density limit, so this bound rests on EN 14214 alone. (not yet confirmed against the standard by the author) Assumed typical range used for the point estimate: 860–900, midpoint 880. Same as the EN 14214 specification range.
+- **FAME biodiesel (B100)**, density (kg/m³). Specification: 860-900 [ASTM D6751 / EN 14214]. Two-sided in EN 14214 (860-900). ASTM D6751 sets no density limit, so this bound rests on EN 14214 alone. Taken off the critical path by the breakdown point rather than confirmed directly; see LIMITATIONS 4. Assumed typical range used for the point estimate: 860–900, midpoint 880. Same as the EN 14214 specification range.
 - **FAME biodiesel (B100)**, cetane (cetane number). Specification: min. 47 [ASTM D6751 / EN 14214]. One-sided. ASTM D6751 minimum 47; EN 14214 minimum 51. Neither standard states a maximum. Assumed typical range used for the point estimate: 47–56, midpoint 51.5. ASSUMPTION of this study: 47-56 spans the cetane numbers commonly reported for the methyl esters in the US biodiesel supply. Not a specification bound.
-- **HVO renewable diesel**, density (kg/m³). Specification: 765-800 [EN 15940 (paraffinic diesel)]. Two-sided. EN 15940 specified range. (not yet confirmed against the standard by the author) Assumed typical range used for the point estimate: 765–800, midpoint 782.5. Same as the EN 15940 specification range.
+- **HVO renewable diesel**, density (kg/m³). Specification: 765-800 [EN 15940 (paraffinic diesel)]. Two-sided. EN 15940 specified range, confirmed against the standard under FUELDIV's signed verification gate. Assumed typical range used for the point estimate: 765–800, midpoint 782.5. Same as the EN 15940 specification range.
 - **HVO renewable diesel**, cetane (cetane number). Specification: min. 70 [EN 15940 (paraffinic diesel)]. One-sided. EN 15940 class A minimum 70; no maximum stated. Assumed typical range used for the point estimate: 70–90, midpoint 80. ASSUMPTION of this study: 70-90 is the range commonly reported for hydrotreated renewable diesel. Not a specification bound.
 
 ## Appendix B: panel dimensions

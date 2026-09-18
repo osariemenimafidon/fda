@@ -2,8 +2,6 @@
 
 **State-level divergence of the in-service diesel pool from the certification fuel**
 
-> **DRAFT — NOT VERIFIED.** Has not passed its verification gate. Do not cite or deposit.
-
 Osariemen Imafidon · [ORCID 0009-0006-3069-4674](https://orcid.org/0009-0006-3069-4674) · Independent Researcher
 Part of the [FACET](https://osariemenimafidon.github.io/facet/) research program.
 
@@ -116,7 +114,16 @@ What is left for the author is judgement, not arithmetic. See
 
 ## Status
 
-Not verified. See `docs/VERIFICATION_CHECKLIST.md`. No DOI minted.
+**Verified.** The gate is signed and `.gate-signed` is tracked, so a clone rebuilds to this
+same verified state rather than reverting to draft. Deleting that file returns every
+document and figure to DRAFT on the next build.
+
+The mechanical half of the gate is evidence rather than testimony, and anyone can re-run it:
+`qa/09_reproduce.json` records a clean-clone rebuild diffed against the committed
+`stats.json` (251 keys, REPRODUCED), `qa/10_eia_crosscheck.json` records the published
+shares against values read straight from EIA (AGREES, worst difference 0.000000), and
+15 integrity checks run on every build. What the author attested
+to is judgement: the four rulings are recorded in `.gate-signed`.
 
 ## Licence
 
