@@ -3,3 +3,6 @@
 concept: 10.5281/zenodo.22822535
 version_v2: 10.5281/zenodo.22832979
 version_v1: 10.5281/zenodo.22822536
+# The pipeline and data are deposited separately from the manuscript.
+software_concept: 10.5281/zenodo.22833317
+software_v1_0_1: 10.5281/zenodo.22833318
