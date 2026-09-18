@@ -3,22 +3,54 @@
   "upload_type": "dataset",
   "description": "<p>State-level estimates, for 51 United States jurisdictions over 2011&ndash;2024 (728 state-years), of how far each state's transportation diesel pool has moved from the fuel EPA certifies engines on, combining Energy Information Administration consumption volumes with published specification envelopes for the three pool components.</p>\n\n<p><strong>The result is asymmetric, and the asymmetry is the contribution.</strong> For states blending hydrotreated renewable diesel the direction of divergence is established for any admissible property values, because HVO's density envelope is disjoint from the certification fuel's: California's 2024 pool is <strong>54.6% non-petroleum</strong> and sits <strong>34.1 kg/m&sup3; lighter</strong>, with a sensitivity interval excluding zero. For states blending only FAME biodiesel <strong>the direction is not established</strong>, and none is asserted. Across the panel, density direction is sign-robust in 2.7% of state-years and cetane in 4.7%. The spread between the lightest and heaviest estimated state pool in 2024 is <strong>38.3 kg/m&sup3;</strong>, and that spread does not depend on the choice of reference.</p>\n\n<p><strong>Method.</strong> Specification envelopes are kept separate from assumed typical values, so a standard's one-sided limit is never closed with a number no standard states. Where an assumption could not be removed &mdash; FAME's density rests on EN 14214, since ASTM D6751 sets no density limit at all &mdash; a <em>breakdown point</em> is reported instead: the 2024 cross-section's directions hold unless FAME density exceeds 917 kg/m&sup3;, which no fatty acid methyl ester approaches, while 18 early-year rows do depend on the assumption and are reported as doing so. No cetane point estimate is published, because every candidate rested on an assumption rather than a specification; the reported quantity is a specification-derived bound.</p>\n\n<p><strong>Verification is evidence rather than testimony.</strong> A clean-clone rebuild diffs 251 keys against the committed statistics file (REPRODUCED); the published shares are compared against values read directly from EIA's own CSV (AGREES, worst share difference 0.000000); raw input digests are recomputed against the provenance log; 16 integrity checks run on every build. The author's signature covers the four judgement calls and not the arithmetic.</p>\n\n<p><strong>Scope, stated plainly.</strong> These are estimates from specification envelopes, not fuel assays &mdash; nobody sampled a pump. The pool described is transportation-sector distillate, while the companion certification panel is 91.9% nonroad, so the two are largely different populations: the claim is about the market, not about the certified fleet.</p>\n\n<p>The archive also documents a methodological trap in the source data: the Energy Information Administration changed its distillate accounting at 2021, so the intuitive blend-share construction double-counts from that year forward while being correct before it, inflating the 2024 national pool by 19,273 thousand barrels (1.662%).</p>",
   "creators": [
-    {"name": "Imafidon, Osariemen", "orcid": "0009-0006-3069-4674", "affiliation": "Independent Researcher"}
+    {
+      "name": "Imafidon, Osariemen",
+      "orcid": "0009-0006-3069-4674",
+      "affiliation": "Independent Researcher"
+    }
   ],
   "license": "cc-by-4.0",
   "access_right": "open",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "language": "eng",
   "keywords": [
-    "diesel fuel", "renewable diesel", "biodiesel", "fuel specifications",
-    "engine certification", "compression ignition", "EIA SEDS",
-    "uncertainty propagation", "breakdown point", "open government data"
+    "diesel fuel",
+    "renewable diesel",
+    "biodiesel",
+    "fuel specifications",
+    "engine certification",
+    "compression ignition",
+    "EIA SEDS",
+    "uncertainty propagation",
+    "breakdown point",
+    "open government data"
   ],
   "related_identifiers": [
-    {"identifier": "https://github.com/osariemenimafidon/fda", "relation": "isSupplementTo", "scheme": "url"},
-    {"identifier": "10.5281/zenodo.22822535", "relation": "isDocumentedBy", "scheme": "doi"},
-    {"identifier": "10.5281/zenodo.22822591", "relation": "isDerivedFrom", "scheme": "doi"},
-    {"identifier": "https://osariemenimafidon.github.io/facet/", "relation": "isPartOf", "scheme": "url"}
+    {
+      "identifier": "https://github.com/osariemenimafidon/fda",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.22822535",
+      "relation": "isDocumentedBy",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.22822591",
+      "relation": "isDerivedFrom",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://osariemenimafidon.github.io/facet/",
+      "relation": "isPartOf",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.22823180",
+      "relation": "isPartOf",
+      "scheme": "doi"
+    }
   ],
   "notes": "Part of the FACET research program. The accompanying preprint is deposited separately at 10.5281/zenodo.22822535, whose version 2 corrects cetane ceilings carried in version 1 that no standard sets. Built entirely from openly available federal data, self-funded, and published openly."
 }
