@@ -1,0 +1,80 @@
+{
+  "capture_file": "eia_capture_2026-09-18.json",
+  "captured_utc": "2026-09-18T00:00:00Z",
+  "source_url": "https://www.eia.gov/state/seds/sep_use/total/csv/use_all_phy.csv",
+  "source_bytes": 2715056,
+  "year": 2024,
+  "tolerance": 0.001,
+  "comparisons": [
+    {
+      "state": "CA",
+      "fame_share": {
+        "eia_derived": 0.0379,
+        "published": 0.0379,
+        "abs_diff": 0.0
+      },
+      "hvo_share": {
+        "eia_derived": 0.5079,
+        "published": 0.5079,
+        "abs_diff": 0.0
+      },
+      "petroleum_share": {
+        "eia_derived": 0.45419,
+        "published": 0.45419,
+        "abs_diff": 0.0
+      },
+      "max_abs_diff": 0.0,
+      "status": "agrees"
+    },
+    {
+      "state": "MN",
+      "fame_share": {
+        "eia_derived": 0.14991,
+        "published": 0.14991,
+        "abs_diff": 0.0
+      },
+      "hvo_share": {
+        "eia_derived": 0.0,
+        "published": 0.0,
+        "abs_diff": 0.0
+      },
+      "petroleum_share": {
+        "eia_derived": 0.85009,
+        "published": 0.85009,
+        "abs_diff": 0.0
+      },
+      "max_abs_diff": 0.0,
+      "status": "agrees"
+    },
+    {
+      "state": "US",
+      "fame_share": {
+        "eia_derived": 0.03745,
+        "published": 0.03745,
+        "abs_diff": 0.0
+      },
+      "hvo_share": {
+        "eia_derived": 0.07536,
+        "published": 0.07536,
+        "abs_diff": 0.0
+      },
+      "petroleum_share": {
+        "eia_derived": 0.8872,
+        "published": 0.8872,
+        "abs_diff": 0.0
+      },
+      "max_abs_diff": 0.0,
+      "status": "agrees"
+    }
+  ],
+  "accounting_break_witness": {
+    "year": 2024,
+    "combined_total_DAACP": 1159775,
+    "naive_sum_DFACP_plus_BDACP_plus_B1ACP": 1179048,
+    "overcount": 19273,
+    "overcount_pct": 1.662,
+    "note": "A pipeline summing the three series would inflate the national pool by this much in this year. DAACP is used instead."
+  },
+  "renewable_diesel_california_share_of_us": 88.8,
+  "verdict": "AGREES"
+}

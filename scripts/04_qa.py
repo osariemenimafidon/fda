@@ -2,7 +2,7 @@
 
 Every number in every FDA document is read from stats.json. Nothing is typed by hand.
 """
-import csv, json, math, sys
+import csv, hashlib, json, math, os, sys
 import pandas as pd
 sys.path.insert(0, "src")
 from fda import properties as P
@@ -145,6 +145,29 @@ def main():
     exposed = df[(df.fame_share + df.hvo_share) > 0]
     checks["unbounded_spec_yields_unbounded_band"] = bool(
         len(exposed) == 0 or exposed.cetane_dev_high.apply(math.isinf).all())
+    # Provenance, checked rather than attested. The verification checklist used
+    # to ask the author to confirm by hand that the raw files matched their
+    # logged digests. That is arithmetic, not judgement, so it runs here and the
+    # checklist asks for judgement instead.
+    prov, prov_detail = [], []
+    for line in open("logs/provenance.jsonl"):
+        r = json.loads(line)
+        local = os.path.join("data/raw", r["file"])
+        if not os.path.exists(local):
+            prov.append(False)
+            prov_detail.append({"file": r["file"], "status": "missing locally"})
+            continue
+        h = hashlib.sha256()
+        with open(local, "rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 20), b""):
+                h.update(chunk)
+        ok = h.hexdigest() == r["sha256"]
+        prov.append(ok)
+        prov_detail.append({"file": r["file"], "status": "match" if ok else "DIFFERS",
+                            "logged_sha256": r["sha256"], "url": r.get("url")})
+    checks["provenance_hashes_match"] = bool(prov and all(prov))
+    S["provenance_verification"] = prov_detail
+
     cols = set(df.columns)
     checks["no_cetane_point_estimate_published"] = not (
         {"blend_cetane", "cetane_dev", "cetane_dev_norm"} & cols)

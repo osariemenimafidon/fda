@@ -87,6 +87,8 @@ python3 scripts/04_qa.py             # integrity checks, stats.json
 python3 scripts/05_figures.py        # figures
 python3 scripts/06_docs.py           # regenerate this documentation
 python3 scripts/07_publish_gate.py   # pre-publication scan
+python3 scripts/09_reproduce.py       # clean-clone rebuild, diffed against the committed stats
+python3 scripts/10_eia_crosscheck.py  # published shares vs values read straight from EIA
 ```
 
 Every number in every document is interpolated from `data/processed/stats.json`.
@@ -100,6 +102,17 @@ Every number in every document is interpolated from `data/processed/stats.json`.
 | `fda_pool.csv` | Raw extracted volumes before property modelling |
 
 Built data is not committed; it regenerates in seconds and Zenodo is its citable home.
+
+## Verification
+
+The mechanical half runs as code, not as testimony: `09_reproduce.py` clones this repo into
+a clean directory, rebuilds from the raw inputs and diffs the regenerated `stats.json`
+against the committed copy; `10_eia_crosscheck.py` compares the published shares against
+values read straight from EIA's CSV; and `provenance_hashes_match` recomputes every raw
+input's SHA-256 against `logs/provenance.jsonl`. Results live in `qa/`.
+
+What is left for the author is judgement, not arithmetic. See
+`docs/VERIFICATION_CHECKLIST.md`.
 
 ## Status
 

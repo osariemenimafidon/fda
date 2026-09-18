@@ -371,7 +371,7 @@ headline number while presenting itself as a summary of the data.
 
 ### 3.5 Integrity checks
 
-14 checks run on every build. All pass.
+15 checks run on every build. All pass.
 
 Table 3. Integrity checks.
 
@@ -388,6 +388,7 @@ Table 3. Integrity checks.
 | `deviation_within_band` | pass |
 | `one_sided_spec_has_no_upper_bound` | pass |
 | `unbounded_spec_yields_unbounded_band` | pass |
+| `provenance_hashes_match` | pass |
 | `no_cetane_point_estimate_published` | pass |
 | `no_divergence_index_published` | pass |
 | `breakdown_point_reported_where_defined` | pass |

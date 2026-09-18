@@ -1,0 +1,20 @@
+{
+  "captured_utc": "2026-09-18T00:00:00Z",
+  "method": "fetched in the browser on the author's machine, because eia.gov is refused by this environment's egress proxy at CONNECT",
+  "source_url": "https://www.eia.gov/state/seds/sep_use/total/csv/use_all_phy.csv",
+  "http_status": 200,
+  "bytes": 2715056,
+  "year": 2024,
+  "units": "thousand barrels",
+  "series": {
+    "DAACP": "distillate incl. biodiesel and renewable diesel, transportation",
+    "BDACP": "biodiesel, transportation",
+    "B1ACP": "renewable diesel, transportation",
+    "DFACP": "distillate fuel oil, transportation"
+  },
+  "values": {
+    "CA": {"DAACP": 152883, "BDACP": 5795, "B1ACP": 77650, "DFACP": 75059},
+    "MN": {"DAACP": 18338, "BDACP": 2749, "B1ACP": 0, "DFACP": 16553},
+    "US": {"DAACP": 1159775, "BDACP": 43432, "B1ACP": 87395, "DFACP": 1048221}
+  }
+}

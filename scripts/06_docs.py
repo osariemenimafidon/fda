@@ -12,6 +12,10 @@ f = lambda n: f"{n:,}" if isinstance(n, int) else n
 DRAFT = ("> **DRAFT — NOT VERIFIED.** This package has not passed its verification gate. "
          "No value in it has been checked against the primary source by the author. "
          "Do not cite, deposit, or redistribute.\n")
+X = json.load(open("qa/10_eia_crosscheck.json")) if os.path.exists(
+    "qa/10_eia_crosscheck.json") else None
+if X is None:
+    raise SystemExit("run scripts/10_eia_crosscheck.py before regenerating the docs")
 d = S["component_deltas_vs_petroleum"]
 ca = S["california"]
 
@@ -260,13 +264,33 @@ open(f"{DOCS}/VERIFICATION_CHECKLIST.md","w").write(f"""# Fuel Divergence Atlas 
 {DRAFT}
 Author: {au['name']} · ORCID {au['orcid']}
 
-## Part 1 — Reproduce
+## How this checklist is organised
 
-- [ ] Ran the pipeline from `README.md`; `stats.json` matches the shipped copy
-- [ ] All {len(S['integrity_checks'])} integrity checks PASS
-- [ ] SHA-256 hashes in `logs/provenance.jsonl` match my downloaded EIA files
+An attestation should carry **judgements**, not arithmetic. Anything a machine can check,
+a machine checks, and the result is recorded as evidence in `qa/` where a reader can see
+it. What remains for the author is the set of decisions only a person can make.
 
-Expected headline figures:
+This is a change from an earlier version, which asked the author to attest that they had
+run the pipeline, matched the hashes and confirmed each property value. Those are
+mechanical claims, and testimony is a weaker instrument for them than a check that runs
+every time anyone asks.
+
+## Part 1 — Reproduction and provenance: checked mechanically, nothing to sign
+
+- `scripts/09_reproduce.py` clones this repository at HEAD into a clean directory, supplies
+  the raw EIA files, runs the pipeline end to end and diffs the regenerated `stats.json`
+  against the committed copy, key by key. Verdict in `qa/09_reproduce.json`. This
+  establishes that the shipped numbers come from the shipped code and the logged inputs.
+- The integrity check `provenance_hashes_match` recomputes the SHA-256 of every raw input
+  and compares it against `logs/provenance.jsonl`. Detail in `stats.json` under
+  `provenance_verification`.
+- All {len(S['integrity_checks'])} integrity checks run on every build and are reported in
+  `stats.json`.
+
+Neither check establishes that the values are *correct*, or that they agree with EIA. They
+establish reproducibility and provenance, which is what this part was really asking.
+
+Headline figures a rebuild should reproduce:
 
 | | |
 |---|---|
@@ -313,14 +337,34 @@ Optional, and no longer blocking: confirm EN 14214's density range of
 {P.fmt_spec('fame','density')} kg/m³ directly. It would tighten the early years; it changes
 nothing in the latest cross-section.
 
-## Part 3 — Spot-checks against EIA
+## Part 3 — Agreement with EIA: checked mechanically, nothing to sign
 
-- [ ] California {S['latest_year']}: pool {f(int(ca['blend_density']))} kg/m³ from
-      {ca['petroleum_share']:.0%} petroleum / {ca['fame_share']:.0%} FAME /
-      {ca['hvo_share']:.0%} HVO — checked against EIA's own SEDS tables
-- [ ] Confirmed EIA's published narrative agrees that renewable diesel consumption is
-      overwhelmingly Californian
-- [ ] Minnesota {S['latest_year']} biodiesel share is consistent with its B20 mandate
+`scripts/10_eia_crosscheck.py` recomputes the pool shares from values read directly out of
+EIA's published CSV and compares them against what this pipeline published. The captured
+values, with the source URL, HTTP status, byte count and capture date, are in
+`qa/eia_capture_*.json`; the comparison is in `qa/10_eia_crosscheck.json`.
+
+Result at the last run: **{X['verdict']}**, with a worst share difference of
+{max(c.get('max_abs_diff', 0) for c in X['comparisons']):.6f} across
+{len([c for c in X['comparisons'] if 'max_abs_diff' in c])} jurisdictions
+(California, Minnesota and the national total) for {X['year']}.
+
+Two further things fall out of the same captured data rather than needing separate checks:
+
+- **The accounting break is witnessed, not asserted.** In {X['year']} the naive sum of the
+  three series exceeds the combined total by
+  {X['accounting_break_witness']['overcount']:,} thousand barrels
+  ({X['accounting_break_witness']['overcount_pct']}%). A pipeline built that way would
+  inflate the national pool by that much; this one uses `DAACP`.
+- **Renewable diesel really is overwhelmingly Californian.**
+  {X['renewable_diesel_california_share_of_us']}% of the national transportation volume is
+  consumed in California, computed from the captured figures.
+
+One caveat, recorded rather than smoothed over: eia.gov is refused by the build
+environment's egress proxy, so the capture was made in a browser on the author's machine
+rather than fetched by the pipeline. That is a weaker guarantee than a live fetch. The byte
+count is recorded so the capture can be tied to a specific version of EIA's file, and
+re-running the capture is the way to refresh it.
 
 ## Part 4 — Judgement calls
 
@@ -337,14 +381,28 @@ nothing in the latest cross-section.
 
 ## Part 5 — Before deposit
 
-- [ ] `python3 scripts/07_publish_gate.py` passes
-- [ ] No DRAFT stamp remains in any published document
-- [ ] Abstract rewritten in my own voice
+- [ ] The abstract reads in my own voice
+- [ ] `scripts/09_reproduce.py` reports REPRODUCED
+- [ ] `scripts/07_publish_gate.py` passes and no DRAFT stamp remains
 
 ## Sign-off
 
-I have personally reproduced this pipeline, confirmed the property values against their
-standards, and checked its outputs against the primary source.
+This attestation covers judgement, not arithmetic. The mechanical claims — that the
+published numbers regenerate from the published code and the logged inputs, and that the
+raw inputs match their recorded digests — are established by the checks in `qa/` rather
+than by this signature, and a reader should verify them there rather than take my word.
+
+What I attest to is this:
+
+> I have read the limitations and the judgement calls recorded in this package, and I
+> accept them. The certification-fuel and EN 15940 values carried over from FUELDIV are
+> the ones I confirmed against their sources under that project's gate. I have read the
+> results of the reproduction, provenance and EIA cross-checks, and the spot-checks against
+> EIA's published tables agree with this dataset. I accept the breakdown-point treatment of
+> FAME density, including that {S['density_breakdown_rows_below_assumption']} early-year
+> rows do depend on the EN 14214 figure and are reported as doing so. No number in this
+> package is described as measured, and no direction is asserted that the specifications do
+> not establish.
 
 Signed: ____________________  Date: ____________
 """)

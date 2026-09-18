@@ -293,6 +293,20 @@
     "fame.cetane",
     "hvo.cetane"
   ],
+  "provenance_verification": [
+    {
+      "file": "use_all_phy.csv",
+      "status": "match",
+      "logged_sha256": "efd03111cc2b5b5bc25d94e97340bf19ddad260e81874e4ed6c8d59fcf199f57",
+      "url": "https://www.eia.gov/state/seds/sep_use/total/csv/use_all_phy.csv"
+    },
+    {
+      "file": "Codes_and_Descriptions.xlsx",
+      "status": "match",
+      "logged_sha256": "c34324b0ae9c793b45261a1377a2d4fb1ad002d27b54195329bed6514897169f",
+      "url": "https://www.eia.gov/state/seds/CDF/Codes_and_Descriptions.xlsx"
+    }
+  ],
   "integrity_checks": {
     "no_negative_petroleum_share": true,
     "shares_sum_to_one": true,
@@ -305,6 +319,7 @@
     "deviation_within_band": true,
     "one_sided_spec_has_no_upper_bound": true,
     "unbounded_spec_yields_unbounded_band": true,
+    "provenance_hashes_match": true,
     "no_cetane_point_estimate_published": true,
     "no_divergence_index_published": true,
     "breakdown_point_reported_where_defined": true

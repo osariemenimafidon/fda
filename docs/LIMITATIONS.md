@@ -161,6 +161,7 @@ All pass in this build. They test internal consistency, **not** agreement with E
 - PASS — `deviation_within_band`
 - PASS — `one_sided_spec_has_no_upper_bound`
 - PASS — `unbounded_spec_yields_unbounded_band`
+- PASS — `provenance_hashes_match`
 - PASS — `no_cetane_point_estimate_published`
 - PASS — `no_divergence_index_published`
 - PASS — `breakdown_point_reported_where_defined`
