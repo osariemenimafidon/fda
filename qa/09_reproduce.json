@@ -1,7 +1,7 @@
 {
-  "checked_utc": "2026-09-18T06:06:25.953789+00:00",
-  "repo_head": "8390e940d233c434793fa99c1e691d1e3f973dbd",
-  "clone_head": "8390e940d233c434793fa99c1e691d1e3f973dbd",
+  "checked_utc": "2026-09-18T06:11:09.402363+00:00",
+  "repo_head": "437edc4d85f30c201fc14416ce83212b362e0769",
+  "clone_head": "437edc4d85f30c201fc14416ce83212b362e0769",
   "clone_is_same_commit": true,
   "raw_files_supplied": [
     "Codes_and_Descriptions.xlsx",
@@ -28,52 +28,6 @@
   "keys_ignored": [
     "build_date"
   ],
-  "differences": [
-    {
-      "key": "integrity_checks.provenance_hashes_match",
-      "committed": true,
-      "rebuilt": "<absent>"
-    },
-    {
-      "key": "provenance_verification[0].file",
-      "committed": "use_all_phy.csv",
-      "rebuilt": "<absent>"
-    },
-    {
-      "key": "provenance_verification[0].logged_sha256",
-      "committed": "efd03111cc2b5b5bc25d94e97340bf19ddad260e81874e4ed6c8d59fcf199f57",
-      "rebuilt": "<absent>"
-    },
-    {
-      "key": "provenance_verification[0].status",
-      "committed": "match",
-      "rebuilt": "<absent>"
-    },
-    {
-      "key": "provenance_verification[0].url",
-      "committed": "https://www.eia.gov/state/seds/sep_use/total/csv/use_all_phy.csv",
-      "rebuilt": "<absent>"
-    },
-    {
-      "key": "provenance_verification[1].file",
-      "committed": "Codes_and_Descriptions.xlsx",
-      "rebuilt": "<absent>"
-    },
-    {
-      "key": "provenance_verification[1].logged_sha256",
-      "committed": "c34324b0ae9c793b45261a1377a2d4fb1ad002d27b54195329bed6514897169f",
-      "rebuilt": "<absent>"
-    },
-    {
-      "key": "provenance_verification[1].status",
-      "committed": "match",
-      "rebuilt": "<absent>"
-    },
-    {
-      "key": "provenance_verification[1].url",
-      "committed": "https://www.eia.gov/state/seds/CDF/Codes_and_Descriptions.xlsx",
-      "rebuilt": "<absent>"
-    }
-  ],
-  "verdict": "DIFFERS"
+  "differences": [],
+  "verdict": "REPRODUCED"
 }
