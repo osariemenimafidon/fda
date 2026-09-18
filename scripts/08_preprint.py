@@ -39,24 +39,76 @@ D   = S["component_deltas_vs_petroleum"]
 LIGHT = [r for r in S["most_lighter"] if r["density_dev"] < 0]
 HEAVY = S["most_heavier"]
 
-def env(comp, prop):
+def row(comp, prop):
     for r in COMP:
         if r["component"] == comp and r["property"] == prop:
-            return float(r["min"]), float(r["max"]), float(r["midpoint"]), r["spec"], r["note"]
+            return r
     raise KeyError((comp, prop))
 
-def rng(comp, prop, unit=""):
-    lo, hi, _, _, _ = env(comp, prop)
-    return f"{lo:g}–{hi:g}{(' ' + unit) if unit else ''}"
+
+def _f(v):
+    return None if v in ("", None) else float(v)
+
+
+def spec_rng(comp, prop, unit=""):
+    """The specification as the standard states it. A one-sided limit is rendered
+    in words, never closed with a number the standard does not give."""
+    r = row(comp, prop)
+    lo, hi = _f(r["spec_min"]), _f(r["spec_max"])
+    u = (" " + unit) if unit else ""
+    if lo is not None and hi is not None:
+        return f"{lo:g}–{hi:g}{u}"
+    if lo is not None:
+        return f"minimum {lo:g}{u}, no maximum stated"
+    if hi is not None:
+        return f"maximum {hi:g}{u}, no minimum stated"
+    return "not specified"
+
+
+def typ_rng(comp, prop, unit=""):
+    """The assumed typical range, which is an assumption of this study."""
+    r = row(comp, prop)
+    lo, hi = _f(r["typical_min"]), _f(r["typical_max"])
+    u = (" " + unit) if unit else ""
+    return f"{lo:g}–{hi:g}{u}"
+
+
+def plain(text):
+    """`[VERIFY]` is an engineering annotation for the author, not prose for a
+    reader, and the publication gate blocks on it appearing in a document. The
+    meaning belongs in the manuscript; the tag does not."""
+    return text.replace(
+        "[VERIFY]",
+        "(not yet confirmed against the standard by the author)").strip()
+
+
+def one_sided(comp, prop):
+    return row(comp, prop)["spec_one_sided"] in ("True", "true")
+
+# retained name so the manuscript body reads naturally; always the SPECIFICATION
+rng = spec_rng
 
 def delta(k):
+    """Render a component's difference interval. Where the governing standard is
+    one-sided the corresponding side is unbounded, and is said to be rather than
+    closed with a number."""
     d = D[k]
-    return (f"{d['low']:+.1f} to {d['high']:+.1f}",
-            "excludes zero" if d["excludes_zero"] else "**straddles zero**")
+    lo, hi = d["low"], d["high"]
+    if d["low_unbounded"] and d["high_unbounded"]:
+        span = "unbounded on both sides"
+    elif d["high_unbounded"]:
+        span = f"{lo:+.1f} or more, no upper bound"
+    elif d["low_unbounded"]:
+        span = f"{hi:+.1f} or less, no lower bound"
+    else:
+        span = f"{lo:+.1f} to {hi:+.1f}"
+    return (span, "excludes zero" if d["excludes_zero"] else "**straddles zero**")
 
 T_COMPONENTS = "\n".join(
-    f"| {r['label']} | {r['property']} | {float(r['min']):g}–{float(r['max']):g} "
-    f"{r['units'].replace('kg/m3', 'kg/m³')} | {float(r['midpoint']):g} | {r['spec']} |"
+    f"| {r['label']} | {r['property']} | {r['spec_rendered']} "
+    f"{r['units'].replace('kg/m3', 'kg/m³')} | "
+    f"{float(r['typical_min']):g}–{float(r['typical_max']):g} | "
+    f"{float(r['midpoint']):g} | {r['spec']} |"
     for r in COMP)
 
 T_DELTAS = "\n".join(
@@ -152,8 +204,10 @@ The headline results are asymmetric, and the asymmetry is the contribution. For 
 blending hydrotreated renewable diesel, the **direction** of divergence is established for
 any admissible property values: HVO's density envelope ({rng('hvo','density','kg/m³')})
 lies entirely below the certification fuel's
-({rng('petroleum','density','kg/m³')}) and its cetane envelope
-({rng('hvo','cetane')}) entirely above ({rng('petroleum','cetane')}). California's {LAT} pool
+({rng('petroleum','density','kg/m³')}), and its cetane specification sets a minimum of
+{_f(row('hvo','cetane')['spec_min']):g} with no maximum stated, against the certification
+fuel's maximum of {_f(row('petroleum','cetane')['spec_max']):g}, so it lies wholly above the
+certification range on that property too. California's {LAT} pool
 is **{S['california_non_petroleum_pct']}% non-petroleum** —
 {CA['hvo_share']*100:.0f}% renewable diesel — and sits **{abs(CA['density_dev']):.0f}
 kg/m³ lighter** than the certification fuel, with a sensitivity interval of
@@ -311,10 +365,13 @@ Each pool component carries a density and a cetane envelope taken from its gover
 specification. These are the paper's central assumptions and are published as data rather
 than buried in code.
 
-Table 1. Component property envelopes.
+Table 1. Component property envelopes. The **specification** column is what the governing
+standard guarantees, with `min.` meaning the standard states no maximum. The **assumed
+typical** range and the point estimate derived from it are assumptions of this study, not
+specification bounds; only the specification column enters the sensitivity analysis.
 
-| Component | Property | Envelope | Midpoint | Specification |
-|:--------------------------------------|:---------|:------------------|---------:|:--------------------------|
+| Component | Property | Specification | Assumed typical | Point est. | Source |
+|:--------------------------|:---------|:--------------------|:-----------|-------:|:-----------------|
 {T_COMPONENTS}
 
 The petroleum row is the reference, and its provenance matters: the density envelope is
@@ -396,10 +453,29 @@ blending only biodiesel the direction is genuinely undetermined by the specifica
 
 Each state-year's deviation interval is computed by evaluating the deviation expression at the
 combination of component values that minimises it and the combination that maximises it. A
-state-year is flagged **sign-robust** when that interval excludes zero. The median band width
-is {S['density_band_median']} kg/m³ for density and {S['cetane_band_median']} cetane
-numbers; the bands are narrow in absolute terms precisely because most states blend little,
-and narrow bands around small deviations are still bands that contain zero.
+state-year is flagged **sign-robust** when that interval excludes zero.
+
+For density, both component specifications are two-sided, so every interval is bounded and
+the median band width is {S['density_band_median']} kg/m³. The bands are narrow in absolute
+terms precisely because most states blend little, and narrow bands around small deviations
+are still bands that contain zero.
+
+For cetane the situation is different and the difference is the point. Neither EN 15940 nor
+EN 14214 nor ASTM D6751 states a cetane maximum, so the upper side of the deviation interval
+is **unbounded** for any state blending either component:
+{S['cetane_band_unbounded_pct']}% of state-years have no finite upper bound on their cetane
+deviation. We carry that as unbounded rather than closing it with a number no standard
+supports. The asymmetry is consequential but limited: an unbounded upper side cannot make a
+sign robust, and cannot break one either, so a direction established by the lower bound
+survives while the magnitude does not.
+
+An earlier version of this pipeline carried cetane maxima of 80 for HVO and 56 for FAME.
+Neither is a specification value. Closing the intervals that way understated the uncertainty
+on every cetane result, and it is recorded here because it is the same class of error as the
+accounting trap in Section 2.2: an assumption that looks like a measurement. No reported
+density estimate changed when it was corrected, because density was never affected; the
+cetane point estimates did change, because HVO's assumed typical range now matches the basis
+its own source note states.
 
 ### 3.4 The divergence index
 
@@ -485,9 +561,13 @@ so the direction is established for any admissible property values.
 
 The estimated blend cetane is **{CA['blend_cetane']:.1f}**, against a certification fuel
 envelope of {rng('petroleum','cetane')}. The pool's estimated cetane sits above the entire
-certification envelope, not merely above its midpoint. Subject to the linear-blending caveat
-of Section 3.1, this is a state whose fuel is outside the certification specification on two
-properties at once.
+certification envelope, not merely above its midpoint. Two caveats attach to that figure and
+neither is small: cetane does not blend linearly by volume (Section 3.1), and the estimate
+rests on an assumed typical range for HVO rather than on a specification, because EN 15940
+states only a minimum. The *direction* is established by the specification and survives both
+caveats; the *value* {CA['blend_cetane']:.1f} does not, and should be read as indicative.
+Subject to that, this is a state whose fuel lies outside the certification specification on
+two properties at once.
 
 {', '.join(r['state'] for r in LIGHT[1:])} follow the same pattern at smaller renewable shares
 and with correspondingly smaller deviations, and their intervals likewise exclude zero.
@@ -685,7 +765,7 @@ results are the author's, and the author is responsible for the content.
 
 ## Appendix A: component envelopes with source notes
 
-{chr(10).join(f"- **{r['label']}**, {r['property']} ({r['units'].replace('kg/m3','kg/m' + chr(179))}): {float(r['min']):g}–{float(r['max']):g}, midpoint {float(r['midpoint']):g}. {r['spec']}. {r['note']}" for r in COMP)}
+{chr(10).join(f"- **{r['label']}**, {r['property']} ({r['units'].replace('kg/m3','kg/m' + chr(179))}). Specification: {r['spec_rendered']} [{r['spec']}]. {plain(r['note'])} Assumed typical range used for the point estimate: {float(r['typical_min']):g}–{float(r['typical_max']):g}, midpoint {float(r['midpoint']):g}. {plain(r['typical_basis'])}" for r in COMP)}
 
 ## Appendix B: panel dimensions
 

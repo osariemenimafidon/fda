@@ -2,7 +2,7 @@
 
 > **DRAFT — NOT VERIFIED.** This package has not passed its verification gate. No value in it has been checked against the primary source by the author. Do not cite, deposit, or redistribute.
 
-Version 1.0 · built 2026-09-15
+Version 1.0 · built 2026-09-18
 
 ## 1. These are estimates from specification envelopes, not fuel assays
 
@@ -39,12 +39,12 @@ pipeline detects the break from the data and aborts if it is not at
 Over the **full** specification envelopes, each component's difference from petroleum
 diesel is:
 
-| Property | Component | Difference from certification fuel | Sign |
-|---|---|---|---|
-| Density | FAME | -5 to +61 kg/m³ | **not determined** |
-| Density | HVO | -100 to -39 kg/m³ | always lighter |
-| Cetane | FAME | -3 to +16 | **not determined** |
-| Cetane | HVO | +20 to +40 | always higher |
+| Property | Component | Specification | Difference from certification fuel | Sign |
+|---|---|---|---|---|
+| Density | FAME | 860-900 | -5 to +61 kg/m³ | **not determined** |
+| Density | HVO | 765-800 | -100 to -39 kg/m³ | always lighter |
+| Cetane | FAME | min. 47 | -3 or more, no upper bound | **not determined** |
+| Cetane | HVO | min. 70 | +20 or more, no upper bound | always higher |
 
 Because the deviation equals `fame_share × (FAME − petroleum) + hvo_share × (HVO −
 petroleum)`, a common-mode error in the petroleum reference cancels. So:
@@ -53,11 +53,21 @@ petroleum)`, a common-mode error in the petroleum reference cancels. So:
 its intervals exclude zero, so for states blending renewable diesel the direction of
 divergence holds for any admissible property values.
 
-**FAME's direction is not determined.** Its density envelope (860-900) overlaps the
-certification fuel's (838.9-864.6), and its cetane envelope (47-56) overlaps the
-certification fuel's (40-50). Both intervals straddle zero. For a state blending only
-biodiesel, **this dataset cannot say whether its pool is heavier or lighter than the
-certification fuel**, only that it differs.
+**FAME's direction is not determined.** Its density envelope
+(860-900) overlaps the certification fuel's
+(838.9-864.6), and its cetane specification
+(min. 47) is one-sided and runs through and above the
+certification fuel's (40-50). Both intervals
+straddle zero. For a state blending only biodiesel, **this dataset cannot say whether its
+pool is heavier or lighter than the certification fuel**, only that it differs.
+
+**One-sided specifications are carried as unbounded, not closed with a number.** Neither
+EN 15940 nor EN 14214 nor ASTM D6751 states a cetane maximum, so the upper side of every
+cetane deviation interval is unbounded: 98.6% of state-years
+have no finite upper bound on their cetane deviation. An earlier version of this pipeline
+carried invented cetane ceilings of 80 and 56, which closed those intervals and understated
+the uncertainty on every cetane result. The density result is unaffected, because both
+density specifications are genuinely two-sided.
 
 Consequently density direction is sign-robust in just
 2.7% of state-years and cetane direction in
@@ -116,3 +126,5 @@ All pass in this build. They test internal consistency, **not** agreement with E
 - PASS — `component_deltas_reported`
 - PASS — `every_row_has_sensitivity_band`
 - PASS — `deviation_within_band`
+- PASS — `one_sided_spec_has_no_upper_bound`
+- PASS — `unbounded_spec_yields_unbounded_band`

@@ -7,7 +7,7 @@ Author: Imafidon, Osariemen · ORCID 0009-0006-3069-4674
 ## Part 1 — Reproduce
 
 - [ ] Ran the pipeline from `README.md`; `stats.json` matches the shipped copy
-- [ ] All 9 integrity checks PASS
+- [ ] All 11 integrity checks PASS
 - [ ] SHA-256 hashes in `logs/provenance.jsonl` match my downloaded EIA files
 
 Expected headline figures:
@@ -25,11 +25,15 @@ Expected headline figures:
 Every number below is mine, not EIA's. **Confirm each against the standard before
 anything is published.** They live in `src/fda/properties.py`.
 
-| Component | Specification | Density range | Cetane range |
-|---|---|---|---|
-| Petroleum diesel | 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975 | 838.9–864.6 | 40.0–50.0 |
-| FAME biodiesel | ASTM D6751 / EN 14214 | 860.0–900.0 | 47.0–56.0 |
-| HVO renewable diesel | EN 15940 (paraffinic diesel) | 765.0–800.0 | 70.0–80.0 |
+| Component | Specification | Density (spec) | Cetane (spec) | Cetane (assumed typical) |
+|---|---|---|---|---|
+| Petroleum diesel | 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975 | 838.9-864.6 | 40-50 | 40–50 |
+| FAME biodiesel | ASTM D6751 / EN 14214 | 860-900 | min. 47 | 47–56 |
+| HVO renewable diesel | EN 15940 (paraffinic diesel) | 765-800 | min. 70 | 70–90 |
+
+The **spec** columns are what the standard guarantees; `min.` means the standard states no
+maximum. The **assumed typical** column is an assumption of this study, used only to form
+a point estimate, and is the item most in need of your judgement.
 
 - [ ] Petroleum diesel density range confirmed
 - [ ] Petroleum diesel cetane range confirmed

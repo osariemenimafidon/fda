@@ -1,6 +1,6 @@
 % How far has the diesel pool moved from the certification fuel? A state-level specification-based atlas for the United States, 2011–2024
 % Osariemen Imafidon
-% 2026-09-15
+% 2026-09-18
 
 Independent Researcher. ORCID [0009-0006-3069-4674](https://orcid.org/0009-0006-3069-4674).
 Correspondence: odimafid@gmail.com.
@@ -35,8 +35,10 @@ The headline results are asymmetric, and the asymmetry is the contribution. For 
 blending hydrotreated renewable diesel, the **direction** of divergence is established for
 any admissible property values: HVO's density envelope (765–800 kg/m³)
 lies entirely below the certification fuel's
-(838.9–864.6 kg/m³) and its cetane envelope
-(70–80) entirely above (40–50). California's 2024 pool
+(838.9–864.6 kg/m³), and its cetane specification sets a minimum of
+70 with no maximum stated, against the certification
+fuel's maximum of 50, so it lies wholly above the
+certification range on that property too. California's 2024 pool
 is **54.6% non-petroleum** —
 51% renewable diesel — and sits **34
 kg/m³ lighter** than the certification fuel, with a sensitivity interval of
@@ -193,16 +195,19 @@ Each pool component carries a density and a cetane envelope taken from its gover
 specification. These are the paper's central assumptions and are published as data rather
 than buried in code.
 
-Table 1. Component property envelopes.
+Table 1. Component property envelopes. The **specification** column is what the governing
+standard guarantees, with `min.` meaning the standard states no maximum. The **assumed
+typical** range and the point estimate derived from it are assumptions of this study, not
+specification bounds; only the specification column enters the sensitivity analysis.
 
-| Component | Property | Envelope | Midpoint | Specification |
-|:--------------------------------------|:---------|:------------------|---------:|:--------------------------|
-| Petroleum diesel (certification envelope) | density | 838.9–864.6 kg/m³ | 851.75 | 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975 |
-| Petroleum diesel (certification envelope) | cetane | 40–50 cetane number | 45 | 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975 |
-| FAME biodiesel (B100) | density | 860–900 kg/m³ | 880 | ASTM D6751 / EN 14214 |
-| FAME biodiesel (B100) | cetane | 47–56 cetane number | 51.5 | ASTM D6751 / EN 14214 |
-| HVO renewable diesel | density | 765–800 kg/m³ | 782.5 | EN 15940 (paraffinic diesel) |
-| HVO renewable diesel | cetane | 70–80 cetane number | 75 | EN 15940 (paraffinic diesel) |
+| Component | Property | Specification | Assumed typical | Point est. | Source |
+|:--------------------------|:---------|:--------------------|:-----------|-------:|:-----------------|
+| Petroleum diesel (certification envelope) | density | 838.9-864.6 kg/m³ | 838.9–864.6 | 851.75 | 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975 |
+| Petroleum diesel (certification envelope) | cetane | 40-50 cetane number | 40–50 | 45 | 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975 |
+| FAME biodiesel (B100) | density | 860-900 kg/m³ | 860–900 | 880 | ASTM D6751 / EN 14214 |
+| FAME biodiesel (B100) | cetane | min. 47 cetane number | 47–56 | 51.5 | ASTM D6751 / EN 14214 |
+| HVO renewable diesel | density | 765-800 kg/m³ | 765–800 | 782.5 | EN 15940 (paraffinic diesel) |
+| HVO renewable diesel | cetane | min. 70 cetane number | 70–90 | 80 | EN 15940 (paraffinic diesel) |
 
 The petroleum row is the reference, and its provenance matters: the density envelope is
 derived from the API gravity range that 40 CFR 1065.703 specifies, not from a commercial
@@ -274,8 +279,8 @@ Table 2. Component differences from the certification fuel over full specificati
 |:---------|:----------|:-----------------------------------|:-----|
 | Density | FAME | -4.6 to +61.1 | **straddles zero** |
 | Density | HVO | -99.6 to -38.9 | excludes zero |
-| Cetane | FAME | -3.0 to +16.0 | **straddles zero** |
-| Cetane | HVO | +20.0 to +40.0 | excludes zero |
+| Cetane | FAME | -3.0 or more, no upper bound | **straddles zero** |
+| Cetane | HVO | +20.0 or more, no upper bound | excludes zero |
 
 The consequence is the paper's central asymmetry. HVO's density difference is negative across
 the entire admissible space and its cetane difference positive across it, so for a state
@@ -285,10 +290,29 @@ blending only biodiesel the direction is genuinely undetermined by the specifica
 
 Each state-year's deviation interval is computed by evaluating the deviation expression at the
 combination of component values that minimises it and the combination that maximises it. A
-state-year is flagged **sign-robust** when that interval excludes zero. The median band width
-is 2.02 kg/m³ for density and 0.58 cetane
-numbers; the bands are narrow in absolute terms precisely because most states blend little,
-and narrow bands around small deviations are still bands that contain zero.
+state-year is flagged **sign-robust** when that interval excludes zero.
+
+For density, both component specifications are two-sided, so every interval is bounded and
+the median band width is 2.02 kg/m³. The bands are narrow in absolute
+terms precisely because most states blend little, and narrow bands around small deviations
+are still bands that contain zero.
+
+For cetane the situation is different and the difference is the point. Neither EN 15940 nor
+EN 14214 nor ASTM D6751 states a cetane maximum, so the upper side of the deviation interval
+is **unbounded** for any state blending either component:
+98.6% of state-years have no finite upper bound on their cetane
+deviation. We carry that as unbounded rather than closing it with a number no standard
+supports. The asymmetry is consequential but limited: an unbounded upper side cannot make a
+sign robust, and cannot break one either, so a direction established by the lower bound
+survives while the magnitude does not.
+
+An earlier version of this pipeline carried cetane maxima of 80 for HVO and 56 for FAME.
+Neither is a specification value. Closing the intervals that way understated the uncertainty
+on every cetane result, and it is recorded here because it is the same class of error as the
+accounting trap in Section 2.2: an assumption that looks like a measurement. No reported
+density estimate changed when it was corrected, because density was never affected; the
+cetane point estimates did change, because HVO's assumed typical range now matches the basis
+its own source note states.
 
 ### 3.4 The divergence index
 
@@ -299,7 +323,7 @@ paper is made on the underlying property deviations and their intervals, not on 
 
 ### 3.5 Integrity checks
 
-Nine checks run on every build. All pass.
+11 checks run on every build. All pass.
 
 Table 3. Integrity checks.
 
@@ -314,6 +338,8 @@ Table 3. Integrity checks.
 | `component_deltas_reported` | pass |
 | `every_row_has_sensitivity_band` | pass |
 | `deviation_within_band` | pass |
+| `one_sided_spec_has_no_upper_bound` | pass |
+| `unbounded_spec_yields_unbounded_band` | pass |
 
 These test internal consistency — that shares sum to one, that no share is negative, that
 the accounting break is where it is expected, that every row carries a sensitivity band and
@@ -374,9 +400,9 @@ deviation of zero.
 
 | State | Petroleum | FAME | HVO | Blend density | Deviation | Sensitivity interval | Blend cetane | Index |
 |:------|----------:|-----:|----:|--------------:|----------:|:---------------------|-------------:|------:|
-| CA | 45.4% | 3.8% | 50.8% | 817.6 | -34.1 | [-50.8, -17.4] | 60.5 | 2.04 |
-| OR | 63.7% | 9.4% | 27.0% | 835.7 | -16.0 | [-27.3, -4.8] | 53.7 | 1.07 |
-| WA | 78.8% | 2.7% | 18.5% | 839.7 | -12.1 | [-18.6, -5.5] | 50.7 | 0.74 |
+| CA | 45.4% | 3.8% | 50.8% | 817.6 | -34.1 | [-50.8, -17.4] | 63.0 | 2.24 |
+| OR | 63.7% | 9.4% | 27.0% | 835.7 | -16.0 | [-27.3, -4.8] | 55.0 | 1.18 |
+| WA | 78.8% | 2.7% | 18.5% | 839.7 | -12.1 | [-18.6, -5.5] | 51.7 | 0.81 |
 | AK | 100.0% | 0.0% | 0.0% | 851.8 | +0.0 | [+0.0, +0.0] | 45.0 | 0.00 |
 | MT | 100.0% | 0.0% | 0.0% | 851.8 | +0.0 | [-0.0, +0.0] | 45.0 | 0.00 |
 
@@ -400,11 +426,15 @@ deviation of **-34.1 kg/m³** with a sensitivity interval of
 **[-50.8, -17.4]**. The interval excludes zero,
 so the direction is established for any admissible property values.
 
-The estimated blend cetane is **60.5**, against a certification fuel
+The estimated blend cetane is **63.0**, against a certification fuel
 envelope of 40–50. The pool's estimated cetane sits above the entire
-certification envelope, not merely above its midpoint. Subject to the linear-blending caveat
-of Section 3.1, this is a state whose fuel is outside the certification specification on two
-properties at once.
+certification envelope, not merely above its midpoint. Two caveats attach to that figure and
+neither is small: cetane does not blend linearly by volume (Section 3.1), and the estimate
+rests on an assumed typical range for HVO rather than on a specification, because EN 15940
+states only a minimum. The *direction* is established by the specification and survives both
+caveats; the *value* 63.0 does not, and should be read as indicative.
+Subject to that, this is a state whose fuel lies outside the certification specification on
+two properties at once.
 
 OR, WA follow the same pattern at smaller renewable shares
 and with correspondingly smaller deviations, and their intervals likewise exclude zero.
@@ -595,12 +625,12 @@ results are the author's, and the author is responsible for the content.
 
 ## Appendix A: component envelopes with source notes
 
-- **Petroleum diesel (certification envelope)**, density (kg/m³): 838.9–864.6, midpoint 851.75. 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975. Derived from the regulation's API gravity range 32-37. ASTM D975 sets no density limit.
-- **Petroleum diesel (certification envelope)**, cetane (cetane number): 40–50, midpoint 45. 40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975. 40 CFR 1065.703 cetane 40-50 by ASTM D613. ASTM D975 requires a minimum of 40.
-- **FAME biodiesel (B100)**, density (kg/m³): 860–900, midpoint 880. ASTM D6751 / EN 14214. EN 14214 range 860-900. ASTM D6751 sets no density limit.
-- **FAME biodiesel (B100)**, cetane (cetane number): 47–56, midpoint 51.5. ASTM D6751 / EN 14214. ASTM D6751 minimum 47; EN 14214 minimum 51.
-- **HVO renewable diesel**, density (kg/m³): 765–800, midpoint 782.5. EN 15940 (paraffinic diesel). EN 15940 specified range.
-- **HVO renewable diesel**, cetane (cetane number): 70–80, midpoint 75. EN 15940 (paraffinic diesel). EN 15940 minimum 70; typical HVO 70-90.
+- **Petroleum diesel (certification envelope)**, density (kg/m³). Specification: 838.9-864.6 [40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975]. Two-sided. Derived from the regulation's API gravity range 32-37. ASTM D975 sets no density limit. Assumed typical range used for the point estimate: 838.9–864.6, midpoint 851.75. Same as the specification; no assumption added.
+- **Petroleum diesel (certification envelope)**, cetane (cetane number). Specification: 40-50 [40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975]. Two-sided. 40 CFR 1065.703 cetane 40-50 by ASTM D613. ASTM D975 requires a minimum of 40. Assumed typical range used for the point estimate: 40–50, midpoint 45. Same as the specification; no assumption added.
+- **FAME biodiesel (B100)**, density (kg/m³). Specification: 860-900 [ASTM D6751 / EN 14214]. Two-sided in EN 14214 (860-900). ASTM D6751 sets no density limit, so this bound rests on EN 14214 alone. (not yet confirmed against the standard by the author) Assumed typical range used for the point estimate: 860–900, midpoint 880. Same as the EN 14214 specification range.
+- **FAME biodiesel (B100)**, cetane (cetane number). Specification: min. 47 [ASTM D6751 / EN 14214]. One-sided. ASTM D6751 minimum 47; EN 14214 minimum 51. Neither standard states a maximum. Assumed typical range used for the point estimate: 47–56, midpoint 51.5. ASSUMPTION of this study: 47-56 spans the cetane numbers commonly reported for the methyl esters in the US biodiesel supply. Not a specification bound.
+- **HVO renewable diesel**, density (kg/m³). Specification: 765-800 [EN 15940 (paraffinic diesel)]. Two-sided. EN 15940 specified range. (not yet confirmed against the standard by the author) Assumed typical range used for the point estimate: 765–800, midpoint 782.5. Same as the EN 15940 specification range.
+- **HVO renewable diesel**, cetane (cetane number). Specification: min. 70 [EN 15940 (paraffinic diesel)]. One-sided. EN 15940 class A minimum 70; no maximum stated. Assumed typical range used for the point estimate: 70–90, midpoint 80. ASSUMPTION of this study: 70-90 is the range commonly reported for hydrotreated renewable diesel. Not a specification bound.
 
 ## Appendix B: panel dimensions
 
@@ -615,5 +645,5 @@ results are the author's, and the author is responsible for the content.
 
 ---
 
-*Preprint generated 2026-09-15. Every quantity is interpolated from the pipeline's own
+*Preprint generated 2026-09-18. Every quantity is interpolated from the pipeline's own
 statistics file; none is transcribed by hand.*

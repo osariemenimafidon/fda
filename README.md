@@ -18,13 +18,26 @@ certification fuel.
 
 That direction holds for **any** admissible property values: HVO's density envelope
 (765–800) lies entirely below the certification fuel's (838.9–864.6), and its cetane
-envelope entirely above. Only the magnitude is uncertain.
+minimum (70) sits above the certification fuel's maximum (50). Only the magnitude is
+uncertain — and on cetane the magnitude is not merely uncertain but unbounded, because
+EN 15940 states a cetane minimum and no maximum.
 
 **For states blending FAME biodiesel, the direction is not established.** FAME's density
-and cetane envelopes both overlap the certification fuel's, so this dataset cannot say
-whether a biodiesel-blending state's pool is heavier or lighter — only that it differs.
-Midpoint estimates suggest heavier, and that may be true, but the specifications do not
-establish it and the dataset does not claim it.
+envelope (860–900) overlaps the certification fuel's, and its cetane specification is
+one-sided (minimum 47), running through and above the certification range. So this dataset
+cannot say whether a biodiesel-blending state's pool is heavier or lighter — only that it
+differs. Midpoint estimates suggest heavier, and that may be true, but the specifications
+do not establish it and the dataset does not claim it.
+
+**A correction, recorded rather than quietly applied.** An earlier version of this pipeline
+carried cetane *maxima* of 80 for HVO and 56 for FAME. No standard states either: EN 15940,
+EN 14214 and ASTM D6751 all specify cetane minima only. Those invented ceilings closed the
+sensitivity interval and understated the uncertainty on every cetane result —
+98.6% of state-years have no finite upper bound on their cetane deviation. The density
+result is unaffected, because both density specifications are genuinely two-sided, and no
+reported density estimate changed. `src/fda/properties.py` now separates what a standard
+guarantees from what this study assumes, and two integrity checks fail the build if a
+one-sided specification is ever closed again.
 
 ## Two things to read before using it
 

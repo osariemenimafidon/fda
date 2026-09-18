@@ -1,5 +1,5 @@
 {
-  "build_date": "2026-09-15",
+  "build_date": "2026-09-18",
   "units": "thousand barrels",
   "year_min": 2011,
   "year_max": 2024,
@@ -22,28 +22,46 @@
     "density_fame": {
       "low": -4.600000000000023,
       "high": 61.10000000000002,
-      "excludes_zero": false
+      "low_unbounded": false,
+      "high_unbounded": false,
+      "excludes_zero": false,
+      "spec": "860-900"
     },
     "density_hvo": {
       "low": -99.60000000000002,
       "high": -38.89999999999998,
-      "excludes_zero": true
+      "low_unbounded": false,
+      "high_unbounded": false,
+      "excludes_zero": true,
+      "spec": "765-800"
     },
     "cetane_fame": {
       "low": -3.0,
-      "high": 16.0,
-      "excludes_zero": false
+      "high": null,
+      "low_unbounded": false,
+      "high_unbounded": true,
+      "excludes_zero": false,
+      "spec": "min. 47"
     },
     "cetane_hvo": {
       "low": 20.0,
-      "high": 40.0,
-      "excludes_zero": true
+      "high": null,
+      "low_unbounded": false,
+      "high_unbounded": true,
+      "excludes_zero": true,
+      "spec": "min. 70"
     }
   },
   "density_sign_robust_pct": 2.7,
   "cetane_sign_robust_pct": 4.7,
   "density_band_median": 2.02,
-  "cetane_band_median": 0.58,
+  "density_band_unbounded_pct": 0.0,
+  "density_dev_low_median": -0.14,
+  "density_upper_bound_exists": true,
+  "cetane_band_median": 0.0,
+  "cetane_band_unbounded_pct": 98.6,
+  "cetane_dev_low_median": -0.09,
+  "cetane_upper_bound_exists": false,
   "latest_year": 2024,
   "spread_kg_m3": 38.3,
   "n_lighter": 3,
@@ -59,8 +77,8 @@
       "density_dev": -34.1,
       "density_dev_low": -50.76,
       "density_dev_high": -17.44,
-      "blend_cetane": 60.48,
-      "divergence_index": 2.039
+      "blend_cetane": 63.02,
+      "divergence_index": 2.238
     },
     {
       "state": "OR",
@@ -71,8 +89,8 @@
       "density_dev": -16.02,
       "density_dev_low": -27.28,
       "density_dev_high": -4.76,
-      "blend_cetane": 53.69,
-      "divergence_index": 1.07
+      "blend_cetane": 55.04,
+      "divergence_index": 1.182
     },
     {
       "state": "WA",
@@ -83,8 +101,8 @@
       "density_dev": -12.06,
       "density_dev_low": -18.58,
       "density_dev_high": -5.55,
-      "blend_cetane": 50.74,
-      "divergence_index": 0.741
+      "blend_cetane": 51.66,
+      "divergence_index": 0.815
     },
     {
       "state": "AK",
@@ -182,8 +200,8 @@
     "density_dev": -34.1,
     "density_dev_low": -50.76,
     "density_dev_high": -17.44,
-    "blend_cetane": 60.48,
-    "divergence_index": 2.039
+    "blend_cetane": 63.02,
+    "divergence_index": 2.238
   },
   "california_non_petroleum_pct": 54.6,
   "us_biofuel_share_by_year": {
@@ -206,19 +224,59 @@
     "petroleum": {
       "density_mid": 851.75,
       "cetane_mid": 45.0,
+      "density_spec": "838.9-864.6",
+      "cetane_spec": "40-50",
+      "density_one_sided": false,
+      "cetane_one_sided": false,
+      "density_typical": [
+        838.9,
+        864.6
+      ],
+      "cetane_typical": [
+        40.0,
+        50.0
+      ],
       "spec": "40 CFR 1065.703 Type 2-D ULSD test fuel; ASTM D975"
     },
     "fame": {
       "density_mid": 880.0,
       "cetane_mid": 51.5,
+      "density_spec": "860-900",
+      "cetane_spec": "min. 47",
+      "density_one_sided": false,
+      "cetane_one_sided": true,
+      "density_typical": [
+        860.0,
+        900.0
+      ],
+      "cetane_typical": [
+        47.0,
+        56.0
+      ],
       "spec": "ASTM D6751 / EN 14214"
     },
     "hvo": {
       "density_mid": 782.5,
-      "cetane_mid": 75.0,
+      "cetane_mid": 80.0,
+      "density_spec": "765-800",
+      "cetane_spec": "min. 70",
+      "density_one_sided": false,
+      "cetane_one_sided": true,
+      "density_typical": [
+        765.0,
+        800.0
+      ],
+      "cetane_typical": [
+        70.0,
+        90.0
+      ],
       "spec": "EN 15940 (paraffinic diesel)"
     }
   },
+  "one_sided_specifications": [
+    "fame.cetane",
+    "hvo.cetane"
+  ],
   "integrity_checks": {
     "no_negative_petroleum_share": true,
     "shares_sum_to_one": true,
@@ -228,7 +286,9 @@
     "robustness_reported_in_stats": true,
     "component_deltas_reported": true,
     "every_row_has_sensitivity_band": true,
-    "deviation_within_band": true
+    "deviation_within_band": true,
+    "one_sided_spec_has_no_upper_bound": true,
+    "unbounded_spec_yields_unbounded_band": true
   },
   "integrity_all_passed": true
 }

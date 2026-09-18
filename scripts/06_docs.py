@@ -20,8 +20,23 @@ def _verdict(k, prop):
     if not v["excludes_zero"]:
         return "**not determined**"
     if prop == "density":
-        return "always lighter" if v["high"] < 0 else "always heavier"
-    return "always higher" if v["low"] > 0 else "always lower"
+        return "always lighter" if (v["high"] is not None and v["high"] < 0) else "always heavier"
+    return "always higher" if (v["low"] is not None and v["low"] > 0) else "always lower"
+
+
+def _interval(k, unit):
+    """Render a difference interval, saying so where a side is unbounded because
+    the governing standard states no limit in that direction."""
+    v = d[k]
+    lo = "unbounded" if v["low_unbounded"] else f"{v['low']:+.0f}"
+    hi = "unbounded" if v["high_unbounded"] else f"{v['high']:+.0f}"
+    if v["low_unbounded"] and v["high_unbounded"]:
+        return "unbounded both sides"
+    if v["high_unbounded"]:
+        return f"{lo}{unit} or more, no upper bound"
+    if v["low_unbounded"]:
+        return f"{hi}{unit} or less, no lower bound"
+    return f"{lo} to {hi}{unit}"
 
 _rows = []
 for prop in ("density", "cetane"):
@@ -29,7 +44,7 @@ for prop in ("density", "cetane"):
         k = f"{prop}_{comp}"
         unit = " kg/m³" if prop == "density" else ""
         _rows.append(f"| {prop.capitalize()} | {comp.upper()} | "
-                     f"{d[k]['low']:+.0f} to {d[k]['high']:+.0f}{unit} | {_verdict(k, prop)} |")
+                     f"{d[k]['spec']} | {_interval(k, unit)} | {_verdict(k, prop)} |")
 delta_table = "\n".join(_rows)
 
 # ---------------- LIMITATIONS ----------------
@@ -73,8 +88,8 @@ pipeline detects the break from the data and aborts if it is not at
 Over the **full** specification envelopes, each component's difference from petroleum
 diesel is:
 
-| Property | Component | Difference from certification fuel | Sign |
-|---|---|---|---|
+| Property | Component | Specification | Difference from certification fuel | Sign |
+|---|---|---|---|---|
 {delta_table}
 
 Because the deviation equals `fame_share × (FAME − petroleum) + hvo_share × (HVO −
@@ -84,11 +99,21 @@ petroleum)`, a common-mode error in the petroleum reference cancels. So:
 its intervals exclude zero, so for states blending renewable diesel the direction of
 divergence holds for any admissible property values.
 
-**FAME's direction is not determined.** Its density envelope (860-900) overlaps the
-certification fuel's (838.9-864.6), and its cetane envelope (47-56) overlaps the
-certification fuel's (40-50). Both intervals straddle zero. For a state blending only
-biodiesel, **this dataset cannot say whether its pool is heavier or lighter than the
-certification fuel**, only that it differs.
+**FAME's direction is not determined.** Its density envelope
+({S['components']['fame']['density_spec']}) overlaps the certification fuel's
+({S['components']['petroleum']['density_spec']}), and its cetane specification
+({S['components']['fame']['cetane_spec']}) is one-sided and runs through and above the
+certification fuel's ({S['components']['petroleum']['cetane_spec']}). Both intervals
+straddle zero. For a state blending only biodiesel, **this dataset cannot say whether its
+pool is heavier or lighter than the certification fuel**, only that it differs.
+
+**One-sided specifications are carried as unbounded, not closed with a number.** Neither
+EN 15940 nor EN 14214 nor ASTM D6751 states a cetane maximum, so the upper side of every
+cetane deviation interval is unbounded: {S['cetane_band_unbounded_pct']}% of state-years
+have no finite upper bound on their cetane deviation. An earlier version of this pipeline
+carried invented cetane ceilings of 80 and 56, which closed those intervals and understated
+the uncertainty on every cetane result. The density result is unaffected, because both
+density specifications are genuinely two-sided.
 
 Consequently density direction is sign-robust in just
 {S['density_sign_robust_pct']}% of state-years and cetane direction in
@@ -222,11 +247,15 @@ Expected headline figures:
 Every number below is mine, not EIA's. **Confirm each against the standard before
 anything is published.** They live in `src/fda/properties.py`.
 
-| Component | Specification | Density range | Cetane range |
-|---|---|---|---|
-| Petroleum diesel | {P.COMPONENTS['petroleum']['spec']} | {P.COMPONENTS['petroleum']['density_min']}–{P.COMPONENTS['petroleum']['density_max']} | {P.COMPONENTS['petroleum']['cetane_min']}–{P.COMPONENTS['petroleum']['cetane_max']} |
-| FAME biodiesel | {P.COMPONENTS['fame']['spec']} | {P.COMPONENTS['fame']['density_min']}–{P.COMPONENTS['fame']['density_max']} | {P.COMPONENTS['fame']['cetane_min']}–{P.COMPONENTS['fame']['cetane_max']} |
-| HVO renewable diesel | {P.COMPONENTS['hvo']['spec']} | {P.COMPONENTS['hvo']['density_min']}–{P.COMPONENTS['hvo']['density_max']} | {P.COMPONENTS['hvo']['cetane_min']}–{P.COMPONENTS['hvo']['cetane_max']} |
+| Component | Specification | Density (spec) | Cetane (spec) | Cetane (assumed typical) |
+|---|---|---|---|---|
+| Petroleum diesel | {P.COMPONENTS['petroleum']['spec']} | {P.fmt_spec('petroleum','density')} | {P.fmt_spec('petroleum','cetane')} | {P.typical('petroleum','cetane')[0]:g}–{P.typical('petroleum','cetane')[1]:g} |
+| FAME biodiesel | {P.COMPONENTS['fame']['spec']} | {P.fmt_spec('fame','density')} | {P.fmt_spec('fame','cetane')} | {P.typical('fame','cetane')[0]:g}–{P.typical('fame','cetane')[1]:g} |
+| HVO renewable diesel | {P.COMPONENTS['hvo']['spec']} | {P.fmt_spec('hvo','density')} | {P.fmt_spec('hvo','cetane')} | {P.typical('hvo','cetane')[0]:g}–{P.typical('hvo','cetane')[1]:g} |
+
+The **spec** columns are what the standard guarantees; `min.` means the standard states no
+maximum. The **assumed typical** column is an assumption of this study, used only to form
+a point estimate, and is the item most in need of your judgement.
 
 - [ ] Petroleum diesel density range confirmed
 - [ ] Petroleum diesel cetane range confirmed

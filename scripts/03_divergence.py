@@ -18,7 +18,7 @@ A sensitivity band is computed by re-running the blend at the min and max of eve
 component's specification envelope, so no reader mistakes the midpoint result for
 a precise measurement.
 """
-import json, os, sys, itertools
+import json, math, os, sys, itertools
 import pandas as pd
 sys.path.insert(0, "src")
 from fda import properties as P
@@ -26,12 +26,23 @@ from fda import properties as P
 OUT = "data/processed"
 
 
+def _term(share, delta):
+    """share * delta, with 0 * inf defined as 0 rather than nan."""
+    if math.isinf(delta):
+        return share.map(lambda x: 0.0 if x == 0 else delta)
+    return share * delta
+
+
 def blend(shares, prop, pick="midpoint"):
+    """Volume-weighted point estimate, formed from the ASSUMED TYPICAL range.
+    Never from the specification envelope: a one-sided specification has no
+    midpoint, and pretending otherwise is what produced the defect this
+    version corrects."""
     total = 0.0
     for comp, share in shares.items():
-        c = P.COMPONENTS[comp]
-        v = (P.midpoint(comp, prop) if pick == "midpoint"
-             else c[f"{prop}_{pick}"])
+        tlo, thi = P.typical(comp, prop)
+        v = P.midpoint(comp, prop) if pick == "midpoint" else (
+            tlo if pick == "min" else thi)
         total += share * v
     return total
 
@@ -56,8 +67,16 @@ def main():
     for prop in ("density", "cetane"):
         df[f"blend_{prop}"] = df.apply(lambda r: blend(sh(r), prop), axis=1)
         ref = P.midpoint(P.REFERENCE, prop)
-        width = (P.COMPONENTS[P.REFERENCE][f"{prop}_max"]
-                 - P.COMPONENTS[P.REFERENCE][f"{prop}_min"])
+        # The normalising width is the certification specification's own width.
+        # The reference is two-sided on both properties, so this is always
+        # finite; asserted rather than assumed, because a one-sided reference
+        # would make the normalised deviation meaningless.
+        rlo, rhi = P.spec(P.REFERENCE, prop)
+        if rlo is None or rhi is None:
+            raise SystemExit(
+                f"The reference component's {prop} specification is one-sided; "
+                "normalised deviation is undefined. Stop.")
+        width = rhi - rlo
         df[f"{prop}_ref"] = ref
         df[f"{prop}_dev"] = df[f"blend_{prop}"] - ref
         df[f"{prop}_dev_norm"] = df[f"{prop}_dev"] / width
@@ -78,44 +97,64 @@ def main():
     # absolute blend density (the obvious approach) therefore overstates the
     # uncertainty enormously - it counts a shift that cancels on both sides.
     #
-    # This matters for the headline claim: over the full specification envelopes,
-    # FAME is heavier than petroleum by +15 to +80 kg/m3 and HVO lighter by -20 to
-    # -80. Both intervals exclude zero, so the DIRECTION of density divergence is
-    # robust to any admissible choice of property values. Only the magnitude is
-    # uncertain. Cetane is different: FAME's cetane difference spans -8 to +5, so
-    # its sign is NOT robust and must not be asserted.
+    # This matters for the headline claim, and the actual intervals are computed
+    # below rather than quoted here, because an earlier version of this comment
+    # quoted figures that the code had since stopped producing.
+    #
+    # Only the SPECIFICATION envelope enters this calculation. Where a standard
+    # is one-sided - EN 15940 states a cetane minimum of 70 and no maximum,
+    # EN 14214 and ASTM D6751 state minima and no maximum - the corresponding
+    # side of the deviation interval is unbounded, and is carried as an infinity
+    # rather than closed with a number no standard supports. The consequence is
+    # asymmetric and deliberate: an unbounded upper side cannot make a sign
+    # robust, but it cannot break one either, so a direction established by the
+    # lower bound survives while the magnitude honestly does not.
     for prop in ("density", "cetane"):
-        pmin = P.COMPONENTS[P.REFERENCE][f"{prop}_min"]
-        pmax = P.COMPONENTS[P.REFERENCE][f"{prop}_max"]
+        pmin, pmax = P.spec_inf(P.REFERENCE, prop)
         lo_terms, hi_terms = [], []
+        unbounded_hi = False
         for comp in ("fame", "hvo"):
-            cmin = P.COMPONENTS[comp][f"{prop}_min"]
-            cmax = P.COMPONENTS[comp][f"{prop}_max"]
+            cmin, cmax = P.spec_inf(comp, prop)
             d_lo, d_hi = cmin - pmax, cmax - pmin       # extreme differences
+            if math.isinf(d_hi):
+                unbounded_hi = True
             share = df[f"{comp}_share"]
-            lo_terms.append(share * min(d_lo, d_hi))
-            hi_terms.append(share * max(d_lo, d_hi))
+            # 0 * inf is nan, not 0. A state burning none of a component is not
+            # exposed to that component's unbounded specification, so the term
+            # is zero there and the guard is load-bearing rather than cosmetic.
+            lo_terms.append(_term(share, min(d_lo, d_hi)))
+            hi_terms.append(_term(share, max(d_lo, d_hi)))
         df[f"{prop}_dev_low"] = sum(lo_terms)
         df[f"{prop}_dev_high"] = sum(hi_terms)
         df[f"{prop}_dev_band"] = df[f"{prop}_dev_high"] - df[f"{prop}_dev_low"]
         # sign is robust where the whole interval sits one side of zero
         df[f"{prop}_sign_robust"] = (
             (df[f"{prop}_dev_low"] > 0) | (df[f"{prop}_dev_high"] < 0))
-        rep[f"{prop}_band_median"] = round(float(df[f"{prop}_dev_band"].median()), 2)
+        finite = df[f"{prop}_dev_band"].replace([math.inf, -math.inf], pd.NA).dropna()
+        rep[f"{prop}_band_median"] = (round(float(finite.median()), 2)
+                                      if len(finite) else None)
+        rep[f"{prop}_band_unbounded_pct"] = round(float(
+            df[f"{prop}_dev_band"].apply(math.isinf).mean() * 100), 1)
+        rep[f"{prop}_dev_low_median"] = round(float(df[f"{prop}_dev_low"].median()), 2)
+        rep[f"{prop}_upper_bound_exists"] = not unbounded_hi
         rep[f"{prop}_sign_robust_pct"] = round(
             float(df[f"{prop}_sign_robust"].mean() * 100), 1)
 
     # component-level difference intervals, reported so the claim is checkable
     rep["component_deltas_vs_petroleum"] = {}
     for prop in ("density", "cetane"):
-        pmin = P.COMPONENTS[P.REFERENCE][f"{prop}_min"]
-        pmax = P.COMPONENTS[P.REFERENCE][f"{prop}_max"]
+        pmin, pmax = P.spec_inf(P.REFERENCE, prop)
         for comp in ("fame", "hvo"):
-            cmin = P.COMPONENTS[comp][f"{prop}_min"]
-            cmax = P.COMPONENTS[comp][f"{prop}_max"]
+            cmin, cmax = P.spec_inf(comp, prop)
             lo, hi = cmin - pmax, cmax - pmin
             rep["component_deltas_vs_petroleum"][f"{prop}_{comp}"] = {
-                "low": lo, "high": hi, "excludes_zero": bool(lo > 0 or hi < 0)}
+                "low": None if math.isinf(lo) else lo,
+                "high": None if math.isinf(hi) else hi,
+                "low_unbounded": bool(math.isinf(lo)),
+                "high_unbounded": bool(math.isinf(hi)),
+                "excludes_zero": bool(lo > 0 or hi < 0),
+                "spec": P.fmt_spec(comp, prop),
+            }
 
     cols = ["State", "year", "pool_total", "units", "petroleum_share", "fame_share",
             "hvo_share",
