@@ -646,7 +646,7 @@ The author has signed the verification gate.
 
 ## Data availability
 
-Processed tables are in the repository under `data/`. The source files are published by the
+The pipeline and the processed panel are deposited on Zenodo under the concept DOI 10.5281/zenodo.22833317, which always resolves to the newest version. This manuscript is a separate object, deposited under 10.5281/zenodo.22822535; the version described here is 10.5281/zenodo.22832979. Processed tables are in the repository under `data/`. The source files are published by the
 Energy Information Administration and are not redistributed; the pipeline downloads them and
 records URL, retrieval date, byte count and SHA-256 digest in the provenance log. Component
 specification envelopes are published as data in `fda_components.csv` with the governing

@@ -24,6 +24,10 @@ if os.path.exists("docs/DOI.txt"):
             _k, _v = _l.split(":", 1)
             DOI[_k.strip()] = _v.strip()
 CONCEPT_DOI = DOI.get("concept")
+# The repository is archived as its own object, separate from the manuscript, so
+# CITATION.cff cites the software deposit and carries the manuscript as a related
+# identifier rather than claiming to be it.
+SOFTWARE_DOI = DOI.get("software_concept") or CONCEPT_DOI
 CITE_LINE = (f"Cite this work by its concept DOI, {CONCEPT_DOI}, which always resolves to "
              f"the newest version. The version deposited alongside this build is "
              f"{DOI.get('version_v2', 'not yet assigned')}."
@@ -474,17 +478,23 @@ authors:
     given-names: "{au['given_names']}"
     orcid: "https://orcid.org/{au['orcid']}"
     affiliation: "{au['affiliation']}"
-version: "{'1.0.0' if SIGNED else '1.0.0-draft'}"
+version: "{'1.0.1' if SIGNED else '1.0.1-draft'}"
 date-released: "{S['build_date']}"
 license: CC-BY-4.0
-doi: "{CONCEPT_DOI or ''}"
+doi: "{SOFTWARE_DOI or ''}"
 identifiers:
   - type: doi
+    value: "{SOFTWARE_DOI or ''}"
+    description: "Concept DOI for the pipeline and data; always resolves to the newest version."
+  - type: doi
+    value: "{DOI.get('software_v1_0_1', '')}"
+    description: "This version of the pipeline and data."
+  - type: doi
     value: "{CONCEPT_DOI or ''}"
-    description: "Concept DOI; always resolves to the newest version."
+    description: "The accompanying manuscript, deposited separately; concept DOI."
   - type: doi
     value: "{DOI.get('version_v2', '')}"
-    description: "Version 2, the corrected build."
+    description: "The manuscript, version 2, the corrected build."
 abstract: >-
   State-level estimates of how far the in-service transportation diesel pool diverges
   from the certification fuel, {S['year_min']}-{S['year_max']}, derived from US EIA State

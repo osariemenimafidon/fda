@@ -16,6 +16,21 @@ from datetime import date
 
 DATA = "data" if os.path.exists("data/stats.json") else "data/processed"
 DOCS = "docs"
+
+# Identifiers are read from docs/DOI.txt rather than typed into prose, so the
+# manuscript cannot state a deposit status the record contradicts.
+DOI = {}
+if os.path.exists(f"{DOCS}/DOI.txt"):
+    for _l in open(f"{DOCS}/DOI.txt"):
+        _l = _l.strip()
+        if _l and not _l.startswith("#") and ":" in _l:
+            _k, _v = _l.split(":", 1)
+            DOI[_k.strip()] = _v.strip()
+_dep = (f"The pipeline and the processed panel are deposited on Zenodo under the concept "
+        f"DOI {DOI['software_concept']}, which always resolves to the newest version. "
+        f"This manuscript is a separate object, deposited under {DOI.get('concept','')}; "
+        f"the version described here is {DOI.get('version_v2','')}. "
+        if DOI.get("software_concept") else "")
 S = json.load(open(f"{DATA}/stats.json"))
 COMP = list(csv.DictReader(open(f"{DATA}/fda_components.csv")))
 ROWS = list(csv.DictReader(open(f"{DATA}/fda_state_year.csv")))
@@ -799,7 +814,7 @@ statistics file; none is typed by hand.
 
 ## Data availability
 
-Processed tables are in the repository under `data/`. The source files are published by the
+{_dep}Processed tables are in the repository under `data/`. The source files are published by the
 Energy Information Administration and are not redistributed; the pipeline downloads them and
 records URL, retrieval date, byte count and SHA-256 digest in the provenance log. Component
 specification envelopes are published as data in `fda_components.csv` with the governing

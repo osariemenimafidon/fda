@@ -7,17 +7,23 @@ authors:
     given-names: "Osariemen"
     orcid: "https://orcid.org/0009-0006-3069-4674"
     affiliation: "Independent Researcher"
-version: "1.0.0"
+version: "1.0.1"
 date-released: "2026-09-18"
 license: CC-BY-4.0
-doi: "10.5281/zenodo.22822535"
+doi: "10.5281/zenodo.22833317"
 identifiers:
   - type: doi
+    value: "10.5281/zenodo.22833317"
+    description: "Concept DOI for the pipeline and data; always resolves to the newest version."
+  - type: doi
+    value: "10.5281/zenodo.22833318"
+    description: "This version of the pipeline and data."
+  - type: doi
     value: "10.5281/zenodo.22822535"
-    description: "Concept DOI; always resolves to the newest version."
+    description: "The accompanying manuscript, deposited separately; concept DOI."
   - type: doi
     value: "10.5281/zenodo.22832979"
-    description: "Version 2, the corrected build."
+    description: "The manuscript, version 2, the corrected build."
 abstract: >-
   State-level estimates of how far the in-service transportation diesel pool diverges
   from the certification fuel, 2011-2024, derived from US EIA State
