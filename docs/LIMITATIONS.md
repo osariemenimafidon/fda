@@ -15,6 +15,28 @@ The dataset answers "given what was consumed, what does the specification imply 
 pool looked like". It does not answer "what was the density of the fuel at this
 station on this day". Any use that treats these as measurements is misuse.
 
+### 1b. It is also not the fuel the certified engines mostly burn
+
+The second limit on scope is easier to miss than the first, and it bounds what this
+dataset can say about the rest of the research program.
+
+This analysis covers **transportation-sector** distillate, because that is the sector EIA
+publishes by state. The engine population it is meant to speak to lives in CIDEX, and
+CIDEX is **91.9% nonroad** (7,925 of 8,627 certified families). Off-road, marine,
+rail, heating and industrial distillate are excluded from this pool entirely.
+
+So the pool measured here and the engines certified there are, for the most part,
+different populations. What this dataset establishes is a claim about **the market**: that
+the diesel sold for transportation in some states has moved a long way from the
+certification fuel. It does not establish what fuel any particular certified engine
+burned, and it is not evidence that nonroad fuel has moved the same way — nonroad
+distillate may differ in blending, in seasonality and in regional distribution, and none
+of it is in these numbers.
+
+Closing that gap needs off-road distillate consumption by state, which this analysis does
+not use. Until then, a reader joining this dataset to CIDEX should treat the join as
+suggestive of a market-wide direction rather than as a property of the certified fleet.
+
 ## 2. The obvious way to compute blend share is wrong
 
 EIA changed its distillate accounting at data year **2021**.
@@ -129,9 +151,10 @@ bound, not an estimate, and a bound is unaffected by the blending law.
 
 ## 6. Transportation sector only
 
-Uses the `*ACP` series — consumption by the transportation sector. Off-road, marine,
-rail, heating and industrial distillate are excluded. Many of the engines CIDEX covers
-are nonroad, so the fuel pool they actually see is **not** exactly this one.
+The operational detail behind §1b: this analysis uses the `*ACP` series, consumption by the
+transportation sector, which is the sector EIA publishes at state level. Off-road, marine,
+rail, heating and industrial distillate are excluded. See §1b for what that means for
+reading this dataset alongside CIDEX.
 
 ## 7. The reference point is a choice
 

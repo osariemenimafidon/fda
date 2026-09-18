@@ -108,9 +108,11 @@ re-running the capture is the way to refresh it.
 
 ## Part 4 — Judgement calls
 
-- [ ] **Reference point.** Using the petroleum specification midpoint
-      (851.75 kg/m³) as the certification-fuel proxy is defensible, or
-      I have substituted EPA's actual certification fuel specification.
+- [ ] **Reference point.** Using the midpoint of EPA's own certification fuel envelope
+      (851.75 kg/m³, the centre of the API 32-37 range in
+      40 CFR 1065.703) as the reference is defensible. I have read §7, and I accept that
+      shifting the reference moves every state's deviation by a constant and leaves the
+      38.3 kg/m³ spread between states unchanged.
 - [ ] **Cetane.** I accept that the cetane direction is not robust
       (4.7% of rows) and that LIMITATIONS §3 and §5 say so
       plainly enough that no reader will quote a cetane direction for a FAME state.

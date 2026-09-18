@@ -149,6 +149,11 @@ not.
 It does not claim a direction for FAME-blending states. The specifications do not determine
 one.
 
+It does not describe the fuel burned by the engines in the companion certification panel.
+That panel is 91.9% nonroad, and this analysis covers transportation-sector
+distillate; the two are largely different populations, for the reasons set out in
+Section 6. The claim here is about the market, not about the certified fleet.
+
 ---
 
 ## 2 Data
@@ -603,11 +608,22 @@ with those envelopes, and they are the author's first verification item.
 
 **Cetane does not blend linearly.** The cetane column is indicative only.
 
-**Transportation sector only.** The analysis uses the transportation consumption series, so
-off-road, marine, rail, heating and industrial distillate are excluded. Many of the engines in
-the companion certification panel are nonroad, so the fuel pool those engines actually see is
-not exactly this one. This is a real mismatch between the two studies and is stated rather
-than minimised.
+**Transportation sector only, and the engine population does not match.** The analysis uses
+the transportation consumption series, because that is the sector published at state level,
+so off-road, marine, rail, heating and industrial distillate are excluded entirely. The
+companion certification panel is **91.9% nonroad** (7,925 of 8,627 certified families).
+The pool measured here and the engines certified there are therefore, for the most part,
+different populations.
+
+This bounds the paper's reach more than any other limitation, so it is stated rather than
+minimised. What is established is a claim about the market: transportation diesel in some
+states has moved a long way from the certification fuel. It is not established what fuel any
+particular certified engine burned, nor that nonroad distillate has moved the same way —
+nonroad fuel may differ in blending, seasonality and regional distribution, and none of it is
+in these numbers. Closing the gap needs off-road distillate consumption by state, which this
+analysis does not use. A reader joining this dataset to the certification panel should treat
+the join as suggestive of a market-wide direction rather than as a property of the certified
+fleet.
 
 **State of sale, not state of use.** Consumption is attributed to the state of sale;
 long-haul freight burns fuel across state lines, so a state's estimated pool is not the fuel

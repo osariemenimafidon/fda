@@ -12,6 +12,18 @@ f = lambda n: f"{n:,}" if isinstance(n, int) else n
 DRAFT = ("> **DRAFT — NOT VERIFIED.** This package has not passed its verification gate. "
          "No value in it has been checked against the primary source by the author. "
          "Do not cite, deposit, or redistribute.\n")
+# The engine population this dataset is meant to speak to lives in CIDEX, so the
+# mismatch between that population and this one is computed from CIDEX's own
+# statistics rather than asserted. If CIDEX is not beside this repository the
+# sentence is written without the figure instead of with a remembered one.
+CIDEX_STATS = os.environ.get("CIDEX_ROOT", "../cidex") + "/data/processed/stats.json"
+if os.path.exists(CIDEX_STATS):
+    _c = json.load(open(CIDEX_STATS))
+    NONROAD_PCT = f"{_c['families_nonroad'] / _c['families_total'] * 100:.1f}%"
+    NONROAD_N = f"{_c['families_nonroad']:,} of {_c['families_total']:,}"
+else:
+    NONROAD_PCT, NONROAD_N = "most", "most"
+
 X = json.load(open("qa/10_eia_crosscheck.json")) if os.path.exists(
     "qa/10_eia_crosscheck.json") else None
 if X is None:
@@ -67,6 +79,28 @@ inside — or outside — those ranges.
 The dataset answers "given what was consumed, what does the specification imply the
 pool looked like". It does not answer "what was the density of the fuel at this
 station on this day". Any use that treats these as measurements is misuse.
+
+### 1b. It is also not the fuel the certified engines mostly burn
+
+The second limit on scope is easier to miss than the first, and it bounds what this
+dataset can say about the rest of the research program.
+
+This analysis covers **transportation-sector** distillate, because that is the sector EIA
+publishes by state. The engine population it is meant to speak to lives in CIDEX, and
+CIDEX is **{NONROAD_PCT} nonroad** ({NONROAD_N} certified families). Off-road, marine,
+rail, heating and industrial distillate are excluded from this pool entirely.
+
+So the pool measured here and the engines certified there are, for the most part,
+different populations. What this dataset establishes is a claim about **the market**: that
+the diesel sold for transportation in some states has moved a long way from the
+certification fuel. It does not establish what fuel any particular certified engine
+burned, and it is not evidence that nonroad fuel has moved the same way — nonroad
+distillate may differ in blending, in seasonality and in regional distribution, and none
+of it is in these numbers.
+
+Closing that gap needs off-road distillate consumption by state, which this analysis does
+not use. Until then, a reader joining this dataset to CIDEX should treat the join as
+suggestive of a market-wide direction rather than as a property of the certified fleet.
 
 ## 2. The obvious way to compute blend share is wrong
 
@@ -179,9 +213,10 @@ bound, not an estimate, and a bound is unaffected by the blending law.
 
 ## 6. Transportation sector only
 
-Uses the `*ACP` series — consumption by the transportation sector. Off-road, marine,
-rail, heating and industrial distillate are excluded. Many of the engines CIDEX covers
-are nonroad, so the fuel pool they actually see is **not** exactly this one.
+The operational detail behind §1b: this analysis uses the `*ACP` series, consumption by the
+transportation sector, which is the sector EIA publishes at state level. Off-road, marine,
+rail, heating and industrial distillate are excluded. See §1b for what that means for
+reading this dataset alongside CIDEX.
 
 ## 7. The reference point is a choice
 
@@ -220,7 +255,6 @@ COL = {
  "density_dev_high":"Highest deviation across the full specification envelopes.",
  "density_dev_band":"density_dev_high − density_dev_low.",
  "density_sign_robust":"True when the whole band sits one side of zero.",
- "blend_cetane":"Volume-weighted blend cetane. **Indicative only — see LIMITATIONS §5.**",
  "cetane_ref":"Reference cetane (petroleum specification midpoint).",
  "cetane_dev":"blend_cetane − cetane_ref.","cetane_dev_norm":"Normalised by spec width.",
  "cetane_dev_low":"Lowest cetane deviation the specifications permit. This is the reported cetane quantity: no cetane point estimate is published, because every candidate rests on an assumed typical range rather than a specification.",
@@ -368,9 +402,11 @@ re-running the capture is the way to refresh it.
 
 ## Part 4 — Judgement calls
 
-- [ ] **Reference point.** Using the petroleum specification midpoint
-      ({S['density_reference']} kg/m³) as the certification-fuel proxy is defensible, or
-      I have substituted EPA's actual certification fuel specification.
+- [ ] **Reference point.** Using the midpoint of EPA's own certification fuel envelope
+      ({S['density_reference']} kg/m³, the centre of the API 32-37 range in
+      40 CFR 1065.703) as the reference is defensible. I have read §7, and I accept that
+      shifting the reference moves every state's deviation by a constant and leaves the
+      {S['spread_kg_m3']} kg/m³ spread between states unchanged.
 - [ ] **Cetane.** I accept that the cetane direction is not robust
       ({S['cetane_sign_robust_pct']}% of rows) and that LIMITATIONS §3 and §5 say so
       plainly enough that no reader will quote a cetane direction for a FAME state.
