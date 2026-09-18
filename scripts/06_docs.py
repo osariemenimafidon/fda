@@ -129,16 +129,49 @@ moved the result from "robust" to "not established" for every FAME-blending stat
 
 Every row carries `density_sign_robust` and `cetane_sign_robust` so this cannot be missed.
 
-## 4. Component property values are assumptions, not measurements
+## 4. Component property values are assumptions — but they are no longer load-bearing
 
-All midpoints live in `src/fda/properties.py` with their specification source. The whole
-index scales with them. They are the author's first verification item.
+All values live in `src/fda/properties.py`, which separates two things an earlier version
+conflated: the **specification** a standard guarantees, and an **assumed typical** range
+used only for a point estimate.
+
+Two consequences follow, and they run in opposite directions.
+
+**The FAME density assumption has been taken off the critical path.** ASTM D6751 — the
+standard the United States biodiesel supply is actually produced to — sets no density limit
+at all, so the 860–900 kg/m³ bound rests on EN 14214, a European standard, alone. Rather
+than assert it and propagate it, every state-year with both components now carries a
+**breakdown point**: the FAME density above which the sign of its density deviation would
+cease to be robust. In {S['density_breakdown_latest_year']} the tightest of those thresholds
+is **{S['density_breakdown_latest_min_kg_m3']:.0f} kg/m³**
+({S['density_breakdown_latest_min_state']}), against an assumed FAME density of
+{S['fame_density_assumed_midpoint']:.0f} kg/m³ and a real-world figure near it. No fatty
+acid methyl ester approaches those thresholds, so the latest cross-section's direction does
+not depend on the assumption. A reader can check that without owning EN 14214.
+
+**Earlier years are a different matter, and the breakdown point says so.** Renewable diesel
+penetration grew across the window, so in early years the HVO term was small relative to the
+FAME term and the threshold falls: the tightest across the whole panel is
+{S['density_breakdown_panel_min_kg_m3']:.0f} kg/m³
+({S['density_breakdown_panel_min_state']}, {S['density_breakdown_panel_min_year']}), which
+is *below* the assumed FAME density. {S['density_breakdown_rows_below_assumption']} of
+{S['density_breakdown_defined_rows']} defined rows sit below it. Those rows' directions do
+depend on the assumption, and that is the same fact the
+{S['density_sign_robust_pct']}% panel-wide sign-robustness figure reports from the other
+side.
+
+**No cetane point estimate is published at all.** Every candidate rested on an assumed
+typical range rather than a specification, so the reported cetane quantity is
+`cetane_dev_low`: the least the pool's cetane can exceed the reference by, given only what
+the standards guarantee. The retired `divergence_index` went with it, because half of it was
+that assumption.
 
 ## 5. Linear volume blending
 
-Density blends close to linearly by volume. **Cetane does not.** The cetane column is a
-volume-weighted approximation and should be treated as indicative only — a further reason
-not to lean on the cetane result.
+Density blends close to linearly by volume, so the density estimate is reasonable within
+its stated limits. **Cetane does not blend linearly.** That was one of two reasons the
+cetane point estimate has been withdrawn; the other is in §4. What remains for cetane is a
+bound, not an estimate, and a bound is unaffected by the blending law.
 
 ## 6. Transportation sector only
 
@@ -186,7 +219,8 @@ COL = {
  "blend_cetane":"Volume-weighted blend cetane. **Indicative only — see LIMITATIONS §5.**",
  "cetane_ref":"Reference cetane (petroleum specification midpoint).",
  "cetane_dev":"blend_cetane − cetane_ref.","cetane_dev_norm":"Normalised by spec width.",
- "cetane_dev_low":"Lowest cetane deviation across envelopes.",
+ "cetane_dev_low":"Lowest cetane deviation the specifications permit. This is the reported cetane quantity: no cetane point estimate is published, because every candidate rests on an assumed typical range rather than a specification.",
+ "density_breakdown_fame_kg_m3":"Breakdown point. The FAME density above which the sign of this row's density deviation would no longer be robust, holding HVO and petroleum at the admissible values least favourable to the conclusion. Empty where undefined (no FAME or no HVO). Compare against the assumed FAME density of 880 kg/m3: a threshold far above it means the conclusion does not depend on the FAME assumption.",
  "cetane_dev_high":"Highest cetane deviation across envelopes.",
  "cetane_dev_band":"Band width.",
  "cetane_sign_robust":f"True when the band excludes zero. Only {S['cetane_sign_robust_pct']}% of rows.",
@@ -242,10 +276,9 @@ Expected headline figures:
 | Density direction sign-robust | {S['density_sign_robust_pct']}% of state-years |
 | Cetane direction sign-robust | {S['cetane_sign_robust_pct']}% of state-years |
 
-## Part 2 — The property values (the load-bearing assumption)
+## Part 2 — The property values
 
-Every number below is mine, not EIA's. **Confirm each against the standard before
-anything is published.** They live in `src/fda/properties.py`.
+Every number below is mine, not EIA's, and they live in `src/fda/properties.py`.
 
 | Component | Specification | Density (spec) | Cetane (spec) | Cetane (assumed typical) |
 |---|---|---|---|---|
@@ -254,14 +287,31 @@ anything is published.** They live in `src/fda/properties.py`.
 | HVO renewable diesel | {P.COMPONENTS['hvo']['spec']} | {P.fmt_spec('hvo','density')} | {P.fmt_spec('hvo','cetane')} | {P.typical('hvo','cetane')[0]:g}–{P.typical('hvo','cetane')[1]:g} |
 
 The **spec** columns are what the standard guarantees; `min.` means the standard states no
-maximum. The **assumed typical** column is an assumption of this study, used only to form
-a point estimate, and is the item most in need of your judgement.
+maximum. The **assumed typical** column is an assumption of this study, used only to form a
+point estimate.
 
-- [ ] Petroleum diesel density range confirmed
-- [ ] Petroleum diesel cetane range confirmed
-- [ ] FAME density and cetane ranges confirmed
-- [ ] HVO density and cetane ranges confirmed
-- [ ] Set `verified_by_author` to True in `fda_components.csv` once all four are done
+**This part used to be the load-bearing one. It is not any more.** Four of the six values
+below are the same figures FUELDIV confirmed against the primary sources under its own
+signed gate — the certification fuel's density and cetane envelopes from 40 CFR 1065.703,
+and EN 15940's density range and cetane minimum. The fifth, FAME's density, has been taken
+off the critical path by the breakdown point in LIMITATIONS §4. The sixth, the assumed
+typical cetane ranges, no longer feeds any published number, because no cetane point
+estimate is published.
+
+- [ ] The four values carried over from FUELDIV are the ones I confirmed there:
+      certification density {P.fmt_spec('petroleum','density')} kg/m³, certification cetane
+      {P.fmt_spec('petroleum','cetane')}, EN 15940 density {P.fmt_spec('hvo','density')}
+      kg/m³, EN 15940 cetane {P.fmt_spec('hvo','cetane')}
+- [ ] I accept the breakdown-point treatment of FAME density: the
+      {S['density_breakdown_latest_year']} cross-section's direction holds unless FAME
+      density exceeds {S['density_breakdown_latest_min_kg_m3']:.0f} kg/m³, which it cannot,
+      **and** {S['density_breakdown_rows_below_assumption']} earlier rows do depend on the
+      EN 14214 figure and are reported as such
+- [ ] Set `verified_by_author` to True in `fda_components.csv`
+
+Optional, and no longer blocking: confirm EN 14214's density range of
+{P.fmt_spec('fame','density')} kg/m³ directly. It would tighten the early years; it changes
+nothing in the latest cross-section.
 
 ## Part 3 — Spot-checks against EIA
 

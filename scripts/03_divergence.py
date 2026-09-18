@@ -83,7 +83,12 @@ def main():
         rep[f"{prop}_reference"] = ref
         rep[f"{prop}_spec_width"] = width
 
-    df["divergence_index"] = (df.density_dev_norm**2 + df.cetane_dev_norm**2) ** 0.5
+    # An earlier version reported a `divergence_index`: the euclidean magnitude of
+    # the normalised (density, cetane) pair. It is retired. Half of it came from a
+    # cetane point estimate that rests on an assumed typical range rather than on
+    # any specification, so the index let an assumption into a headline number
+    # while presenting itself as a summary of the data. `density_dev_norm` carries
+    # the comparable, specification-derived magnitude on its own.
     df["direction"] = pd.cut(df.density_dev, [-1e9, -0.5, 0.5, 1e9],
                              labels=["lighter", "at_reference", "heavier"])
 
@@ -140,6 +145,66 @@ def main():
         rep[f"{prop}_sign_robust_pct"] = round(
             float(df[f"{prop}_sign_robust"].mean() * 100), 1)
 
+    # --- breakdown point: how wrong would the FAME assumption have to be? ---
+    #
+    # FAME's density bound rests on EN 14214 alone, because ASTM D6751 - the
+    # standard the US biodiesel supply is actually made to - sets no density
+    # limit at all. Asserting a FAME density therefore puts a European standard
+    # on the critical path of a United States result.
+    #
+    # Reporting a breakdown point removes it from that path. Rather than assume
+    # FAME's density and propagate it, we ask how far wrong the assumption would
+    # have to be before the sign of the deviation changed. The deviation is
+    #
+    #     dev = f*(Df - Dp) + h*(Dh - Dp)
+    #
+    # so holding HVO and petroleum at the admissible values least favourable to
+    # a "lighter" conclusion, the sign survives unless
+    #
+    #     Df > Dp_min - h*(Dh_max - Dp_min)/f
+    #
+    # A reader can judge that threshold against what a fatty acid methyl ester
+    # can physically be, without owning EN 14214.
+    plo, phi = P.spec_inf(P.REFERENCE, "density")
+    _, hhi = P.spec_inf("hvo", "density")
+    hvo_worst = df.hvo_share * (hhi - plo)          # least negative HVO term
+    with pd.option_context("mode.use_inf_as_na", False):
+        thresh = (-hvo_worst / df.fame_share.where(df.fame_share > 0))
+    df["density_breakdown_fame_kg_m3"] = (plo + thresh).where(
+        (df.fame_share > 0) & (df.hvo_share > 0))
+
+    bd = df[df.density_breakdown_fame_kg_m3.notna()]
+    rep["density_breakdown_defined_rows"] = int(len(bd))
+    assumed = P.midpoint("fame", "density")
+    rep["fame_density_assumed_midpoint"] = assumed
+
+    # Reported for the latest year and for the whole panel separately, because
+    # they say different things. Renewable diesel penetration grew over the
+    # window, so a threshold that comfortably clears any plausible FAME density
+    # in the latest cross-section does not in the early years, where HVO shares
+    # were small relative to FAME. That is the same fact the panel-wide
+    # sign-robustness figure reports, seen from the other side.
+    latest = bd[bd.year == df.year.max()]
+    if len(latest):
+        t = latest.loc[latest.density_breakdown_fame_kg_m3.idxmin()]
+        rep["density_breakdown_latest_year"] = int(df.year.max())
+        rep["density_breakdown_latest_min_kg_m3"] = round(
+            float(t.density_breakdown_fame_kg_m3), 0)
+        rep["density_breakdown_latest_min_state"] = str(t.State)
+        rep["density_breakdown_latest_by_state"] = {
+            str(r.State): round(float(r.density_breakdown_fame_kg_m3), 0)
+            for _, r in latest.sort_values("density_breakdown_fame_kg_m3").iterrows()}
+        rep["density_breakdown_latest_all_clear_assumption"] = bool(
+            (latest.density_breakdown_fame_kg_m3 > assumed).all())
+    if len(bd):
+        t = bd.loc[bd.density_breakdown_fame_kg_m3.idxmin()]
+        rep["density_breakdown_panel_min_kg_m3"] = round(
+            float(t.density_breakdown_fame_kg_m3), 0)
+        rep["density_breakdown_panel_min_state"] = str(t.State)
+        rep["density_breakdown_panel_min_year"] = int(t.year)
+        rep["density_breakdown_rows_below_assumption"] = int(
+            (bd.density_breakdown_fame_kg_m3 <= assumed).sum())
+
     # component-level difference intervals, reported so the claim is checkable
     rep["component_deltas_vs_petroleum"] = {}
     for prop in ("density", "cetane"):
@@ -161,10 +226,12 @@ def main():
             "blend_density", "density_ref", "density_dev", "density_dev_norm",
             "density_dev_low", "density_dev_high", "density_dev_band",
             "density_sign_robust",
-            "blend_cetane", "cetane_ref", "cetane_dev", "cetane_dev_norm",
+            # No cetane point estimate is published. Every candidate rests on an
+            # assumed typical range rather than a specification, and the bound
+            # below says what the specifications actually support.
             "cetane_dev_low", "cetane_dev_high", "cetane_dev_band",
             "cetane_sign_robust",
-            "divergence_index", "direction"]
+            "density_breakdown_fame_kg_m3", "direction"]
     df[cols].to_csv(f"{OUT}/fda_state_year.csv", index=False)
     pd.DataFrame(P.as_rows()).to_csv(f"{OUT}/fda_components.csv", index=False)
 
@@ -179,10 +246,10 @@ def main():
     print("\n--- 2024 extremes ---")
     print(latest.nsmallest(3, "density_dev")[
         ["State","petroleum_share","fame_share","hvo_share","blend_density",
-         "density_dev","blend_cetane","divergence_index"]].round(2).to_string(index=False))
+         "density_dev","cetane_dev_low","density_breakdown_fame_kg_m3"]].round(2).to_string(index=False))
     print(latest.nlargest(3, "density_dev")[
         ["State","petroleum_share","fame_share","hvo_share","blend_density",
-         "density_dev","blend_cetane","divergence_index"]].round(2).to_string(index=False))
+         "density_dev","cetane_dev_low","density_breakdown_fame_kg_m3"]].round(2).to_string(index=False))
     print("\ndirection counts:", dict(latest.direction.value_counts()))
 
 

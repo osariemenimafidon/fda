@@ -33,6 +33,15 @@ def main():
 
     S["density_reference"] = dvg["density_reference"]
     S["cetane_reference"] = dvg["cetane_reference"]
+    for k in ("density_breakdown_defined_rows", "fame_density_assumed_midpoint",
+              "density_breakdown_latest_year", "density_breakdown_latest_min_kg_m3",
+              "density_breakdown_latest_min_state", "density_breakdown_latest_by_state",
+              "density_breakdown_latest_all_clear_assumption",
+              "density_breakdown_panel_min_kg_m3", "density_breakdown_panel_min_state",
+              "density_breakdown_panel_min_year",
+              "density_breakdown_rows_below_assumption"):
+        if k in dvg:
+            S[k] = dvg[k]
     S["component_deltas_vs_petroleum"] = dvg["component_deltas_vs_petroleum"]
     S["density_sign_robust_pct"] = dvg["density_sign_robust_pct"]
     S["cetane_sign_robust_pct"] = dvg["cetane_sign_robust_pct"]
@@ -60,8 +69,15 @@ def main():
                 "density_dev": round(float(r.density_dev), 2),
                 "density_dev_low": round(float(r.density_dev_low), 2),
                 "density_dev_high": round(float(r.density_dev_high), 2),
-                "blend_cetane": round(float(r.blend_cetane), 2),
-                "divergence_index": round(float(r.divergence_index), 3)}
+                # Specification-derived, unlike the retired cetane point
+                # estimate: the least the pool's cetane can exceed the
+                # reference by, given only what the standards guarantee.
+                "cetane_dev_low": round(float(r.cetane_dev_low), 2),
+                "density_breakdown_fame_kg_m3": (
+                    None if (r.density_breakdown_fame_kg_m3 is None
+                             or (isinstance(r.density_breakdown_fame_kg_m3, float)
+                                 and math.isnan(r.density_breakdown_fame_kg_m3)))
+                    else round(float(r.density_breakdown_fame_kg_m3), 0))}
 
     S["most_lighter"] = [rec(r) for _, r in L.nsmallest(5, "density_dev").iterrows()]
     S["most_heavier"] = [rec(r) for _, r in L.nlargest(5, "density_dev").iterrows()]
@@ -111,10 +127,12 @@ def main():
     checks["every_row_has_sensitivity_band"] = bool(
         df.density_dev_low.notna().all() and df.density_dev_high.notna().all()
         and df.cetane_dev_low.notna().all() and df.cetane_dev_high.notna().all())
-    checks["deviation_within_band"] = bool(all(
-        ((df[f"{prop}_dev"] >= df[f"{prop}_dev_low"] - 1e-6) &
-         (df[f"{prop}_dev"] <= df[f"{prop}_dev_high"] + 1e-6)).all()
-        for prop in ("density", "cetane")))
+    # Only density has a published point estimate to bracket. Cetane's point
+    # estimate was retired, so there is nothing to check against its bound -
+    # the bound is the reported quantity.
+    checks["deviation_within_band"] = bool(
+        ((df.density_dev >= df.density_dev_low - 1e-6) &
+         (df.density_dev <= df.density_dev_high + 1e-6)).all())
 
     # The defect this version corrects: cetane ceilings of 80 and 56 that no
     # standard states, which closed the sensitivity interval and understated the
@@ -127,6 +145,14 @@ def main():
     exposed = df[(df.fame_share + df.hvo_share) > 0]
     checks["unbounded_spec_yields_unbounded_band"] = bool(
         len(exposed) == 0 or exposed.cetane_dev_high.apply(math.isinf).all())
+    cols = set(df.columns)
+    checks["no_cetane_point_estimate_published"] = not (
+        {"blend_cetane", "cetane_dev", "cetane_dev_norm"} & cols)
+    checks["no_divergence_index_published"] = "divergence_index" not in cols
+    exposed_both = df[(df.fame_share > 0) & (df.hvo_share > 0)]
+    checks["breakdown_point_reported_where_defined"] = bool(
+        len(exposed_both) == 0
+        or exposed_both.density_breakdown_fame_kg_m3.notna().all())
     S["integrity_checks"] = checks
     S["integrity_all_passed"] = all(checks.values())
 

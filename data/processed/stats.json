@@ -18,6 +18,22 @@
   },
   "density_reference": 851.75,
   "cetane_reference": 45.0,
+  "density_breakdown_defined_rows": 39,
+  "fame_density_assumed_midpoint": 880.0,
+  "density_breakdown_latest_year": 2024,
+  "density_breakdown_latest_min_kg_m3": 917.0,
+  "density_breakdown_latest_min_state": "US",
+  "density_breakdown_latest_by_state": {
+    "US": 917.0,
+    "OR": 951.0,
+    "WA": 1104.0,
+    "CA": 1360.0
+  },
+  "density_breakdown_latest_all_clear_assumption": true,
+  "density_breakdown_panel_min_kg_m3": 839.0,
+  "density_breakdown_panel_min_state": "OR",
+  "density_breakdown_panel_min_year": 2017,
+  "density_breakdown_rows_below_assumption": 18,
   "component_deltas_vs_petroleum": {
     "density_fame": {
       "low": -4.600000000000023,
@@ -77,8 +93,8 @@
       "density_dev": -34.1,
       "density_dev_low": -50.76,
       "density_dev_high": -17.44,
-      "blend_cetane": 63.02,
-      "divergence_index": 2.238
+      "cetane_dev_low": 10.04,
+      "density_breakdown_fame_kg_m3": 1360.0
     },
     {
       "state": "OR",
@@ -89,8 +105,8 @@
       "density_dev": -16.02,
       "density_dev_low": -27.28,
       "density_dev_high": -4.76,
-      "blend_cetane": 55.04,
-      "divergence_index": 1.182
+      "cetane_dev_low": 5.11,
+      "density_breakdown_fame_kg_m3": 951.0
     },
     {
       "state": "WA",
@@ -101,8 +117,8 @@
       "density_dev": -12.06,
       "density_dev_low": -18.58,
       "density_dev_high": -5.55,
-      "blend_cetane": 51.66,
-      "divergence_index": 0.815
+      "cetane_dev_low": 3.62,
+      "density_breakdown_fame_kg_m3": 1104.0
     },
     {
       "state": "AK",
@@ -113,8 +129,8 @@
       "density_dev": 0.0,
       "density_dev_low": 0.0,
       "density_dev_high": 0.0,
-      "blend_cetane": 45.0,
-      "divergence_index": 0.0
+      "cetane_dev_low": 0.0,
+      "density_breakdown_fame_kg_m3": null
     },
     {
       "state": "MT",
@@ -125,8 +141,8 @@
       "density_dev": 0.01,
       "density_dev_low": -0.0,
       "density_dev_high": 0.02,
-      "blend_cetane": 45.0,
-      "divergence_index": 0.0
+      "cetane_dev_low": -0.0,
+      "density_breakdown_fame_kg_m3": null
     }
   ],
   "most_heavier": [
@@ -139,8 +155,8 @@
       "density_dev": 4.23,
       "density_dev_low": -0.69,
       "density_dev_high": 9.16,
-      "blend_cetane": 45.97,
-      "divergence_index": 0.191
+      "cetane_dev_low": -0.45,
+      "density_breakdown_fame_kg_m3": null
     },
     {
       "state": "IA",
@@ -151,8 +167,8 @@
       "density_dev": 2.95,
       "density_dev_low": -0.48,
       "density_dev_high": 6.37,
-      "blend_cetane": 45.68,
-      "divergence_index": 0.133
+      "cetane_dev_low": -0.31,
+      "density_breakdown_fame_kg_m3": null
     },
     {
       "state": "IL",
@@ -163,8 +179,8 @@
       "density_dev": 2.15,
       "density_dev_low": -0.35,
       "density_dev_high": 4.65,
-      "blend_cetane": 45.49,
-      "divergence_index": 0.097
+      "cetane_dev_low": -0.23,
+      "density_breakdown_fame_kg_m3": null
     },
     {
       "state": "HI",
@@ -175,8 +191,8 @@
       "density_dev": 1.36,
       "density_dev_low": -0.22,
       "density_dev_high": 2.94,
-      "blend_cetane": 45.31,
-      "divergence_index": 0.062
+      "cetane_dev_low": -0.14,
+      "density_breakdown_fame_kg_m3": null
     },
     {
       "state": "DC",
@@ -187,8 +203,8 @@
       "density_dev": 1.0,
       "density_dev_low": -0.16,
       "density_dev_high": 2.17,
-      "blend_cetane": 45.23,
-      "divergence_index": 0.045
+      "cetane_dev_low": -0.11,
+      "density_breakdown_fame_kg_m3": null
     }
   ],
   "california": {
@@ -200,8 +216,8 @@
     "density_dev": -34.1,
     "density_dev_low": -50.76,
     "density_dev_high": -17.44,
-    "blend_cetane": 63.02,
-    "divergence_index": 2.238
+    "cetane_dev_low": 10.04,
+    "density_breakdown_fame_kg_m3": 1360.0
   },
   "california_non_petroleum_pct": 54.6,
   "us_biofuel_share_by_year": {
@@ -288,7 +304,10 @@
     "every_row_has_sensitivity_band": true,
     "deviation_within_band": true,
     "one_sided_spec_has_no_upper_bound": true,
-    "unbounded_spec_yields_unbounded_band": true
+    "unbounded_spec_yields_unbounded_band": true,
+    "no_cetane_point_estimate_published": true,
+    "no_divergence_index_published": true,
+    "breakdown_point_reported_where_defined": true
   },
   "integrity_all_passed": true
 }

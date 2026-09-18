@@ -26,15 +26,11 @@ Unit of analysis: **(state, year)**. 728 rows,
 | `density_dev_high` | Highest deviation across the full specification envelopes. |
 | `density_dev_band` | density_dev_high − density_dev_low. |
 | `density_sign_robust` | True when the whole band sits one side of zero. |
-| `blend_cetane` | Volume-weighted blend cetane. **Indicative only — see LIMITATIONS §5.** |
-| `cetane_ref` | Reference cetane (petroleum specification midpoint). |
-| `cetane_dev` | blend_cetane − cetane_ref. |
-| `cetane_dev_norm` | Normalised by spec width. |
-| `cetane_dev_low` | Lowest cetane deviation across envelopes. |
+| `cetane_dev_low` | Lowest cetane deviation the specifications permit. This is the reported cetane quantity: no cetane point estimate is published, because every candidate rests on an assumed typical range rather than a specification. |
 | `cetane_dev_high` | Highest cetane deviation across envelopes. |
 | `cetane_dev_band` | Band width. |
 | `cetane_sign_robust` | True when the band excludes zero. Only 4.7% of rows. |
-| `divergence_index` | Euclidean magnitude of the normalised (density, cetane) pair. Always ≥ 0; use the signed columns for direction. |
+| `density_breakdown_fame_kg_m3` | Breakdown point. The FAME density above which the sign of this row's density deviation would no longer be robust, holding HVO and petroleum at the admissible values least favourable to the conclusion. Empty where undefined (no FAME or no HVO). Compare against the assumed FAME density of 880 kg/m3: a threshold far above it means the conclusion does not depend on the FAME assumption. |
 | `direction` | `lighter`, `heavier`, or `at_reference`, from the sign of density_dev. |
 
 ## `fda_components.csv`

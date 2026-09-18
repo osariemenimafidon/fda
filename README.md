@@ -39,6 +39,20 @@ reported density estimate changed. `src/fda/properties.py` now separates what a 
 guarantees from what this study assumes, and two integrity checks fail the build if a
 one-sided specification is ever closed again.
 
+**Two assumptions have been taken off the critical path.** ASTM D6751 — the standard US
+biodiesel is actually made to — sets no density limit, so FAME's 860–900 kg/m³ bound rests
+on EN 14214 alone. Rather than assert it, every state-year with both components carries a
+**breakdown point**: the FAME density above which its direction would stop being robust. In
+2024 the tightest is
+**917 kg/m³**
+(US) against a real FAME density near 880, so the
+latest cross-section does not depend on EN 14214 at all;
+18 early-year rows do, and say so. Separately,
+**no cetane point estimate is published** — every candidate rested on an assumed typical
+range rather than a specification, so what is reported is `cetane_dev_low`, the least the
+pool's cetane can exceed the reference by given only what the standards guarantee. The
+`divergence_index` went with it, because half of it was that assumption.
+
 ## Two things to read before using it
 
 **1. These are estimates, not assays.** Consumption volumes combined with specification

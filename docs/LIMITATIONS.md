@@ -83,16 +83,49 @@ moved the result from "robust" to "not established" for every FAME-blending stat
 
 Every row carries `density_sign_robust` and `cetane_sign_robust` so this cannot be missed.
 
-## 4. Component property values are assumptions, not measurements
+## 4. Component property values are assumptions — but they are no longer load-bearing
 
-All midpoints live in `src/fda/properties.py` with their specification source. The whole
-index scales with them. They are the author's first verification item.
+All values live in `src/fda/properties.py`, which separates two things an earlier version
+conflated: the **specification** a standard guarantees, and an **assumed typical** range
+used only for a point estimate.
+
+Two consequences follow, and they run in opposite directions.
+
+**The FAME density assumption has been taken off the critical path.** ASTM D6751 — the
+standard the United States biodiesel supply is actually produced to — sets no density limit
+at all, so the 860–900 kg/m³ bound rests on EN 14214, a European standard, alone. Rather
+than assert it and propagate it, every state-year with both components now carries a
+**breakdown point**: the FAME density above which the sign of its density deviation would
+cease to be robust. In 2024 the tightest of those thresholds
+is **917 kg/m³**
+(US), against an assumed FAME density of
+880 kg/m³ and a real-world figure near it. No fatty
+acid methyl ester approaches those thresholds, so the latest cross-section's direction does
+not depend on the assumption. A reader can check that without owning EN 14214.
+
+**Earlier years are a different matter, and the breakdown point says so.** Renewable diesel
+penetration grew across the window, so in early years the HVO term was small relative to the
+FAME term and the threshold falls: the tightest across the whole panel is
+839 kg/m³
+(OR, 2017), which
+is *below* the assumed FAME density. 18 of
+39 defined rows sit below it. Those rows' directions do
+depend on the assumption, and that is the same fact the
+2.7% panel-wide sign-robustness figure reports from the other
+side.
+
+**No cetane point estimate is published at all.** Every candidate rested on an assumed
+typical range rather than a specification, so the reported cetane quantity is
+`cetane_dev_low`: the least the pool's cetane can exceed the reference by, given only what
+the standards guarantee. The retired `divergence_index` went with it, because half of it was
+that assumption.
 
 ## 5. Linear volume blending
 
-Density blends close to linearly by volume. **Cetane does not.** The cetane column is a
-volume-weighted approximation and should be treated as indicative only — a further reason
-not to lean on the cetane result.
+Density blends close to linearly by volume, so the density estimate is reasonable within
+its stated limits. **Cetane does not blend linearly.** That was one of two reasons the
+cetane point estimate has been withdrawn; the other is in §4. What remains for cetane is a
+bound, not an estimate, and a bound is unaffected by the blending law.
 
 ## 6. Transportation sector only
 
@@ -128,3 +161,6 @@ All pass in this build. They test internal consistency, **not** agreement with E
 - PASS — `deviation_within_band`
 - PASS — `one_sided_spec_has_no_upper_bound`
 - PASS — `unbounded_spec_yields_unbounded_band`
+- PASS — `no_cetane_point_estimate_published`
+- PASS — `no_divergence_index_published`
+- PASS — `breakdown_point_reported_where_defined`

@@ -118,15 +118,17 @@ T_DELTAS = "\n".join(
 T_LIGHT = "\n".join(
     f"| {r['state']} | {r['petroleum_share']*100:.1f}% | {r['fame_share']*100:.1f}% | "
     f"{r['hvo_share']*100:.1f}% | {r['blend_density']:.1f} | {r['density_dev']:+.1f} | "
-    f"[{r['density_dev_low']:+.1f}, {r['density_dev_high']:+.1f}] | {r['blend_cetane']:.1f} | "
-    f"{r['divergence_index']:.2f} |"
+    f"[{r['density_dev_low']:+.1f}, {r['density_dev_high']:+.1f}] | "
+    f"{r['cetane_dev_low']:+.1f} | "
+    f"{('—' if r.get('density_breakdown_fame_kg_m3') in (None, '') else format(r['density_breakdown_fame_kg_m3'], ',.0f'))} |"
     for r in S["most_lighter"])
 
 T_HEAVY = "\n".join(
     f"| {r['state']} | {r['petroleum_share']*100:.1f}% | {r['fame_share']*100:.1f}% | "
     f"{r['hvo_share']*100:.1f}% | {r['blend_density']:.1f} | {r['density_dev']:+.1f} | "
-    f"[{r['density_dev_low']:+.1f}, {r['density_dev_high']:+.1f}] | {r['blend_cetane']:.1f} | "
-    f"{r['divergence_index']:.2f} |"
+    f"[{r['density_dev_low']:+.1f}, {r['density_dev_high']:+.1f}] | "
+    f"{r['cetane_dev_low']:+.1f} | "
+    f"{('—' if r.get('density_breakdown_fame_kg_m3') in (None, '') else format(r['density_breakdown_fame_kg_m3'], ',.0f'))} |"
     for r in S["most_heavier"])
 
 T_SHARE = "\n".join(
@@ -477,12 +479,60 @@ density estimate changed when it was corrected, because density was never affect
 cetane point estimates did change, because HVO's assumed typical range now matches the basis
 its own source note states.
 
-### 3.4 The divergence index
+### 3.4 Breakdown points, in place of an assumed FAME density
 
-A single ordering statistic per state-year is reported, combining the normalised density and
-cetane deviations, so that states can be ranked without choosing a property. It is a
-convenience for presentation and carries no physical meaning of its own; every claim in this
-paper is made on the underlying property deviations and their intervals, not on the index.
+One assumption in Table 1 is weaker than the rest, and it is weak in a way that matters for
+a United States result. ASTM D6751, the standard the domestic biodiesel supply is actually
+produced to, sets **no density limit at all**. FAME's density bound therefore rests on
+EN 14214, a European standard that does not govern the fuel being described. Asserting it
+and propagating it would put that standard on the critical path of every conclusion.
+
+We remove it from that path by reporting a **breakdown point** instead: rather than assume
+FAME's density, we compute how far wrong the assumption would have to be before a
+conclusion changed. Because the deviation decomposes by component,
+
+$$
+\\Delta\\rho = s_{{f}}\\left(\\rho_{{f}} - \\rho_{{p}}\\right)
+            + s_{{h}}\\left(\\rho_{{h}} - \\rho_{{p}}\\right)
+$$
+
+the sign of a "lighter" conclusion survives, with HVO and petroleum held at the admissible
+values least favourable to it, unless
+
+$$
+\\rho_{{f}} > \\rho_{{p,\\min}}
+  - \\frac{{s_{{h}}\\left(\\rho_{{h,\\max}} - \\rho_{{p,\\min}}\\right)}}{{s_{{f}}}}
+$$
+
+That threshold is published for every state-year in which both components are present
+({S['density_breakdown_defined_rows']} rows), and a reader can judge it against what a fatty
+acid methyl ester can physically be without consulting EN 14214 at all.
+
+The result is asymmetric across the window, and the asymmetry is informative. In
+{S['density_breakdown_latest_year']} the tightest threshold is
+**{S['density_breakdown_latest_min_kg_m3']:.0f} kg/m³**
+({S['density_breakdown_latest_min_state']}), far above both the assumed FAME density of
+{S['fame_density_assumed_midpoint']:.0f} kg/m³ and any real methyl ester, so the latest
+cross-section's directions do not depend on the assumption. Across the whole panel the
+tightest is {S['density_breakdown_panel_min_kg_m3']:.0f} kg/m³
+({S['density_breakdown_panel_min_state']}, {S['density_breakdown_panel_min_year']}), which
+is *below* the assumed density: in the early years, when renewable diesel volumes were small
+relative to biodiesel, the conclusion does rest on EN 14214.
+{S['density_breakdown_rows_below_assumption']} of {S['density_breakdown_defined_rows']}
+defined rows are in that position. This is the same fact the
+{S['density_sign_robust_pct']}% panel-wide sign-robustness figure reports, seen from the
+other side, and reporting it both ways is deliberate.
+
+A breakdown point is a stronger object than a sensitivity interval for a reader who does not
+share the author's assumptions. An interval says what follows *given* an envelope; a
+breakdown point says how much the envelope would have to be wrong to matter. Where a
+specification is unavailable, paywalled, or simply not applicable to the fuel in question,
+the second is the honest form.
+
+An earlier version of this paper also reported a `divergence_index`: the euclidean magnitude
+of the normalised density and cetane deviations. It is retired. Half of it came from the
+cetane point estimate withdrawn in Section 4.3, so the index admitted an assumption into a
+headline number while presenting itself as a summary of the data.
 
 ### 3.5 Integrity checks
 
@@ -539,14 +589,14 @@ Table 5. The five state pools with the lowest estimated density deviation, {LAT}
 blending essentially nothing sit at the reference by construction and appear here with a
 deviation of zero.
 
-| State | Petroleum | FAME | HVO | Blend density | Deviation | Sensitivity interval | Blend cetane | Index |
-|:------|----------:|-----:|----:|--------------:|----------:|:---------------------|-------------:|------:|
+| State | Petrol. | FAME | HVO | Blend density | Deviation | Sensitivity interval | Cetane, at least | FAME breakdown |
+|:------|--------:|-----:|----:|------------:|--------:|:-----------------|---------------:|---------------:|
 {T_LIGHT}
 
 Table 6. The five state pools with the highest estimated density deviation, {LAT}.
 
-| State | Petroleum | FAME | HVO | Blend density | Deviation | Sensitivity interval | Blend cetane | Index |
-|:------|----------:|-----:|----:|--------------:|----------:|:---------------------|-------------:|------:|
+| State | Petrol. | FAME | HVO | Blend density | Deviation | Sensitivity interval | Cetane, at least | FAME breakdown |
+|:------|--------:|-----:|----:|------------:|--------:|:-----------------|---------------:|---------------:|
 {T_HEAVY}
 
 ### 4.3 The established result: renewable-diesel states
@@ -559,15 +609,22 @@ deviation of **{CA['density_dev']:+.1f} kg/m³** with a sensitivity interval of
 **[{CA['density_dev_low']:+.1f}, {CA['density_dev_high']:+.1f}]**. The interval excludes zero,
 so the direction is established for any admissible property values.
 
-The estimated blend cetane is **{CA['blend_cetane']:.1f}**, against a certification fuel
-envelope of {rng('petroleum','cetane')}. The pool's estimated cetane sits above the entire
-certification envelope, not merely above its midpoint. Two caveats attach to that figure and
-neither is small: cetane does not blend linearly by volume (Section 3.1), and the estimate
-rests on an assumed typical range for HVO rather than on a specification, because EN 15940
-states only a minimum. The *direction* is established by the specification and survives both
-caveats; the *value* {CA['blend_cetane']:.1f} does not, and should be read as indicative.
-Subject to that, this is a state whose fuel lies outside the certification specification on
-two properties at once.
+On cetane we report a bound rather than an estimate. Given only what the standards
+guarantee, California's pool exceeds the certification fuel's reference cetane by **at least
+{CA['cetane_dev_low']:+.1f}** — that is, it sits at or above
+{S['cetane_reference'] + CA['cetane_dev_low']:.0f} against a certification envelope of
+{rng('petroleum','cetane')}. The bound is specification-derived and needs no assumption
+about what a typical renewable diesel contains; it is also unaffected by the non-linearity
+of cetane blending, because a bound does not depend on the blending law the way a
+volume-weighted average does. An earlier version published a point estimate here. It has
+been withdrawn: every candidate value rested on an assumed typical cetane range rather than
+on any specification, and a number nobody can defend from a source adds no information to a
+result already established by its bound.
+
+So this is a state whose fuel lies outside the certification specification on two properties
+at once — lighter than the whole density envelope, and above the whole cetane
+envelope — and both halves of that claim rest on specifications rather than
+assumptions.
 
 {', '.join(r['state'] for r in LIGHT[1:])} follow the same pattern at smaller renewable shares
 and with correspondingly smaller deviations, and their intervals likewise exclude zero.

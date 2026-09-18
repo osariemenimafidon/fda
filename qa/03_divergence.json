@@ -14,6 +14,22 @@
   "cetane_dev_low_median": -0.09,
   "cetane_upper_bound_exists": false,
   "cetane_sign_robust_pct": 4.7,
+  "density_breakdown_defined_rows": 39,
+  "fame_density_assumed_midpoint": 880.0,
+  "density_breakdown_latest_year": 2024,
+  "density_breakdown_latest_min_kg_m3": 917.0,
+  "density_breakdown_latest_min_state": "US",
+  "density_breakdown_latest_by_state": {
+    "US": 917.0,
+    "OR": 951.0,
+    "WA": 1104.0,
+    "CA": 1360.0
+  },
+  "density_breakdown_latest_all_clear_assumption": true,
+  "density_breakdown_panel_min_kg_m3": 839.0,
+  "density_breakdown_panel_min_state": "OR",
+  "density_breakdown_panel_min_year": 2017,
+  "density_breakdown_rows_below_assumption": 18,
   "component_deltas_vs_petroleum": {
     "density_fame": {
       "low": -4.600000000000023,

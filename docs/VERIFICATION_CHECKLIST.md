@@ -7,7 +7,7 @@ Author: Imafidon, Osariemen · ORCID 0009-0006-3069-4674
 ## Part 1 — Reproduce
 
 - [ ] Ran the pipeline from `README.md`; `stats.json` matches the shipped copy
-- [ ] All 11 integrity checks PASS
+- [ ] All 14 integrity checks PASS
 - [ ] SHA-256 hashes in `logs/provenance.jsonl` match my downloaded EIA files
 
 Expected headline figures:
@@ -20,10 +20,9 @@ Expected headline figures:
 | Density direction sign-robust | 2.7% of state-years |
 | Cetane direction sign-robust | 4.7% of state-years |
 
-## Part 2 — The property values (the load-bearing assumption)
+## Part 2 — The property values
 
-Every number below is mine, not EIA's. **Confirm each against the standard before
-anything is published.** They live in `src/fda/properties.py`.
+Every number below is mine, not EIA's, and they live in `src/fda/properties.py`.
 
 | Component | Specification | Density (spec) | Cetane (spec) | Cetane (assumed typical) |
 |---|---|---|---|---|
@@ -32,14 +31,31 @@ anything is published.** They live in `src/fda/properties.py`.
 | HVO renewable diesel | EN 15940 (paraffinic diesel) | 765-800 | min. 70 | 70–90 |
 
 The **spec** columns are what the standard guarantees; `min.` means the standard states no
-maximum. The **assumed typical** column is an assumption of this study, used only to form
-a point estimate, and is the item most in need of your judgement.
+maximum. The **assumed typical** column is an assumption of this study, used only to form a
+point estimate.
 
-- [ ] Petroleum diesel density range confirmed
-- [ ] Petroleum diesel cetane range confirmed
-- [ ] FAME density and cetane ranges confirmed
-- [ ] HVO density and cetane ranges confirmed
-- [ ] Set `verified_by_author` to True in `fda_components.csv` once all four are done
+**This part used to be the load-bearing one. It is not any more.** Four of the six values
+below are the same figures FUELDIV confirmed against the primary sources under its own
+signed gate — the certification fuel's density and cetane envelopes from 40 CFR 1065.703,
+and EN 15940's density range and cetane minimum. The fifth, FAME's density, has been taken
+off the critical path by the breakdown point in LIMITATIONS §4. The sixth, the assumed
+typical cetane ranges, no longer feeds any published number, because no cetane point
+estimate is published.
+
+- [ ] The four values carried over from FUELDIV are the ones I confirmed there:
+      certification density 838.9-864.6 kg/m³, certification cetane
+      40-50, EN 15940 density 765-800
+      kg/m³, EN 15940 cetane min. 70
+- [ ] I accept the breakdown-point treatment of FAME density: the
+      2024 cross-section's direction holds unless FAME
+      density exceeds 917 kg/m³, which it cannot,
+      **and** 18 earlier rows do depend on the
+      EN 14214 figure and are reported as such
+- [ ] Set `verified_by_author` to True in `fda_components.csv`
+
+Optional, and no longer blocking: confirm EN 14214's density range of
+860-900 kg/m³ directly. It would tighten the early years; it changes
+nothing in the latest cross-section.
 
 ## Part 3 — Spot-checks against EIA
 
